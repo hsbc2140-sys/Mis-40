@@ -1,0 +1,446 @@
+/* Estilos de la tarjeta. Las variables de color y fuentes están en :root. */
+:root{
+  /* Un solo mundo visual: la sala de la casa de noche, luz de televisor. Cada pista es una página del casete. */
+  --bg:#1a1319;
+  --bg2:#251b22;
+  --wood:#6e4224;
+  --paper:#f2e4c0;
+  --orange:#e8742a;
+  --crt:#a6f0b0;
+  --ink:#2b1e15;
+  --text:#efe4d6;
+  --muted:#b9a99a;
+  --display:"Permanent Marker", "Comic Sans MS", cursive;
+  --screen:"VT323", "Courier New", monospace;
+  --body:"Rubik", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --deck:52px;
+  /* Ancho y alto de la .app (js/horizontal.js los pone en px; si la .app está girada, son la pantalla al revés). */
+  --aw:100vw;
+  --ah:100vh;
+  /* Márgenes seguros (muesca, barra de inicio) vistos desde la .app. */
+  --st:env(safe-area-inset-top);
+  --sr:env(safe-area-inset-right);
+  --sb:env(safe-area-inset-bottom);
+  --sl:env(safe-area-inset-left);
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{margin:0;height:100%}
+body{background:var(--bg);color:var(--text);font-family:var(--body);font-size:16px;line-height:1.5;overflow:hidden;-webkit-tap-highlight-color:transparent}
+button{font:inherit;cursor:pointer}
+button:focus-visible,input:focus-visible,textarea:focus-visible,label:focus-within,a:focus-visible{outline:3px solid var(--orange);outline-offset:3px}
+h1,h2,h3{text-wrap:balance;margin:0}
+p{margin:0}
+.desc{color:var(--muted);max-width:52ch}
+.say{font-family:var(--screen);font-size:22px;color:var(--crt);min-height:1.4em}
+.btnrow{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.btn{background:#3a2e36;color:var(--text);border:1px solid #5a4652;border-radius:8px;padding:8px 14px;font-weight:500;text-decoration:none}
+.btn:hover{background:#45373f}
+.btn.hot{background:var(--orange);color:#1b0f06;border-color:#9c4614;font-weight:700}
+.deck{display:flex;gap:10px;flex-wrap:wrap}
+.deckbtn{background:#2f262d;color:var(--text);border:1px solid #4b3c46;border-bottom-width:4px;border-radius:8px;padding:10px 18px;font-weight:700;letter-spacing:.04em}
+.deckbtn:active{transform:translateY(2px);border-bottom-width:2px}
+.deckbtn.primary{background:var(--orange);border-color:#9c4614;color:#1b0f06}
+.chip{background:transparent;border:1px solid #5a4652;color:var(--muted);border-radius:999px;padding:4px 12px;font-size:14px;white-space:nowrap}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ---------- AVISO: GIRAR EL CELULAR ---------- */
+.rotate{position:fixed;inset:0;z-index:100;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:20px;text-align:center;transition:opacity .5s}
+.rotate.gone{opacity:0;pointer-events:none}
+.rotate[hidden]{display:none}
+.rotate h1{font-family:var(--display);font-weight:400;font-size:clamp(28px,6vw,42px);color:var(--paper)}
+.rot-txt{color:var(--muted);max-width:36ch}
+.rot-phone{width:44px;height:76px;border:3px solid var(--text);border-radius:9px;position:relative;animation:turn 2.4s ease-in-out infinite}
+.rot-phone::after{content:"";position:absolute;left:50%;bottom:5px;width:10px;height:3px;margin-left:-5px;border-radius:2px;background:var(--text)}
+@keyframes turn{0%,25%{transform:rotate(0)}55%,85%{transform:rotate(-90deg)}100%{transform:rotate(0)}}
+.rot-count{display:flex;align-items:baseline;gap:8px;font-family:var(--screen);color:var(--crt)}
+.rot-count b{font-size:56px;font-weight:400;line-height:1;font-variant-numeric:tabular-nums}
+.rot-count span{font-size:22px}
+.rot-ok,#rotGo{display:none}
+.rotate.land .rot-ok{display:block;font-family:var(--screen);font-size:24px;color:var(--crt)}
+.rotate.land #rotGo{display:inline-block}
+.rotate.land .rot-txt{display:none}
+.rotate.land .rot-phone{animation:none;transform:rotate(-90deg);border-color:var(--crt)}
+.rotate.land{gap:8px}
+/* En computador no hay que girar nada: solo se pide subir el volumen. */
+.rot-pc{display:none;color:var(--muted);max-width:40ch}
+.rotate.pc .rot-pc{display:block}
+.rotate.pc .rot-phone,.rotate.pc .rot-txt,.rotate.pc .rot-ok{display:none}
+.rotate.land .rot-count b{font-size:44px}
+
+/* ---------- FORZAR HORIZONTAL ---------- */
+/* Con la pantalla en vertical en un celular, la .app se gira 90° (ver js/horizontal.js).
+   rot-r: celular de lado con la parte de arriba hacia la izquierda; rot-l: hacia la derecha.
+   El aviso de girar solo se acuesta cuando el sensor dice que el celular ya está de lado (tilt). */
+.rot .app,.rot.tilt .rotate{inset:auto;top:0;left:0;width:var(--aw);height:var(--ah);transform-origin:0 0}
+.rot-r .app,.rot-r.tilt .rotate{left:var(--ah);transform:rotate(90deg)}
+.rot-l .app,.rot-l.tilt .rotate{top:var(--aw);transform:rotate(-90deg)}
+.rot-r{--st:env(safe-area-inset-right);--sr:env(safe-area-inset-bottom);--sb:env(safe-area-inset-left);--sl:env(safe-area-inset-top)}
+.rot-l{--st:env(safe-area-inset-left);--sr:env(safe-area-inset-top);--sb:env(safe-area-inset-right);--sl:env(safe-area-inset-bottom)}
+
+/* ---------- APP: CINTA Y PÁGINAS ---------- */
+.app{position:fixed;inset:0;display:grid;grid-template-rows:minmax(0,1fr) auto}
+.tape{position:relative;overflow:hidden}
+.page{position:absolute;inset:0;display:grid;grid-template-rows:minmax(0,1fr);overflow-y:auto;overscroll-behavior:contain;visibility:hidden;
+  padding:max(16px,var(--st)) max(16px,var(--sr)) 16px max(16px,var(--sl))}
+.page.on{visibility:visible}
+.page.in-r{animation:inR .45s ease both}
+.page.in-l{animation:inL .45s ease both}
+.page.out-l{animation:outL .45s ease both}
+.page.out-r{animation:outR .45s ease both}
+@keyframes inR{from{transform:translateX(100%)}}
+@keyframes inL{from{transform:translateX(-100%)}}
+@keyframes outL{to{transform:translateX(-100%)}}
+@keyframes outR{to{transform:translateX(100%)}}
+/* Zumbido: sacudida rápida (0,2 s) repetida 7 veces = 1,4 s. */
+body.buzzing .tape{animation:shake .2s 7}
+
+/* Cada pista: texto a la izquierda, el objeto a la derecha. En vertical, uno debajo del otro. */
+.track{width:min(100%,980px);margin:auto;display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:14px 32px;align-items:center}
+.track-head{display:grid;gap:12px;align-content:center}
+.track-body{display:grid;gap:12px;min-width:0}
+.track h3{font-family:var(--display);font-weight:400;color:var(--paper);font-size:clamp(22px,calc(var(--aw) * .036),32px);display:grid;gap:2px;line-height:1.1}
+.track h3 .n{font-family:var(--screen);color:var(--orange);font-size:.75em;font-weight:400}
+.port .track{grid-template-columns:minmax(0,1fr)}
+.short .page{padding-top:max(10px,var(--st));padding-bottom:10px}
+.short .desc{font-size:14px}
+.short .say{font-size:19px}
+
+/* ---------- REPRODUCTOR (barra de abajo) ---------- */
+.deckbar{--p:0;display:flex;align-items:center;gap:10px;min-height:var(--deck);background:#120d11;border-top:1px solid #3a2e36;
+  padding:6px max(12px,var(--sr)) calc(6px + var(--sb)) max(12px,var(--sl))}
+/* En el TV la barra solo muestra el aviso de apagarlo. */
+.dk-msg{display:none;flex:1;margin:0;text-align:center;font-family:var(--screen);font-size:22px;line-height:1.1;color:var(--paper)}
+.dk-msg b{color:var(--orange);font-weight:400}
+.deckbar.intro>:not(.dk-msg){display:none}
+.deckbar.intro .dk-msg{display:block;animation:soft 2.2s ease-in-out infinite}
+@keyframes soft{50%{opacity:.6}}
+.dk{flex:none;width:46px;height:36px;border-radius:8px;background:#2f262d;color:var(--text);border:1px solid #4b3c46;border-bottom-width:3px;font-size:15px}
+.dk:active{transform:translateY(1px);border-bottom-width:2px}
+.dk:disabled{opacity:.3;cursor:default;transform:none}
+.dk-mid{flex:1;min-width:0;display:flex;align-items:center;gap:12px}
+.minireels{flex:none;display:flex;gap:6px;background:#2a2a2e;border-radius:6px;padding:4px 8px}
+.minireels i{position:relative;width:26px;height:26px;border-radius:50%;--t:calc(6px + 7px * (1 - var(--p)));
+  background:radial-gradient(circle,#4a2e1c 0 var(--t),#1b1b1d calc(var(--t) + .5px))}
+.minireels i.mr-r{--t:calc(6px + 7px * var(--p))}
+.minireels i::after{content:"";position:absolute;inset:8px;border-radius:50%;background:conic-gradient(#ddd 0 50deg,#666 0 120deg,#ddd 0 170deg,#666 0 240deg,#ddd 0 290deg,#666 0)}
+.deckbar.ff .minireels i::after{animation:spin .25s linear infinite}
+.deckbar.rw .minireels i::after{animation:spin .25s linear infinite reverse}
+.dk-info{flex:1;min-width:0;display:grid;gap:3px}
+.dk-prog{height:6px;border-radius:2px;background:#2f262d;overflow:hidden}
+.dk-prog i{display:block;height:100%;width:0;background:var(--orange);transition:width .45s ease}
+.narrow .minireels{display:none}
+.narrow .chip{padding:4px 8px;font-size:13px}
+
+/* ---------- CASETE (imagen con carretes que giran) ---------- */
+.cas{position:relative;aspect-ratio:583/395;filter:drop-shadow(0 16px 26px rgba(0,0,0,.5))}
+.cas img{display:block;width:100%;height:100%}
+/* Cada carrete es un círculo con la misma imagen recortada encima del original: al girar el círculo, gira el carrete.
+   Las posiciones salen de los centros de los carretes en la imagen (583x395): (177,178) y (405,181), radio 34. */
+.hub{position:absolute;top:36.46%;width:11.66%;aspect-ratio:1;border-radius:50%;
+  background:url("../images/casete-abierto.png") no-repeat;background-size:857.35% auto}
+.hub.l{left:24.53%;background-position:27.77% 44.04%}
+.hub.r{left:63.64%;top:37.22%;background-position:72.04% 44.95%}
+
+/* ---------- PORTADA ---------- */
+/* El casete abierto con los carretes girando todo el tiempo; al oprimir PLAY giran más rápido. */
+.cover-in{width:min(100%,980px);margin:auto;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px 36px;align-items:center}
+.cover-cas{position:relative;justify-self:center;aspect-ratio:583/395;width:min(100%,calc((var(--ah) - var(--deck) - 60px) * 1.476))}
+.cover .cas{position:absolute;inset:0}
+.cover .hub{animation:spin 1.6s linear infinite}
+.cover.playing .hub{animation-duration:.45s}
+.cover-txt{display:grid;gap:10px;justify-items:start}
+/* Fuente llamativa de títulos: la misma en la portada (título y subtítulo) y en cada pista. */
+.title{font-family:var(--display);font-weight:400;font-size:clamp(30px,calc(var(--aw) * .054),56px);line-height:1.05;color:var(--paper)}
+.title b{color:var(--orange);font-weight:400}
+.sub{font-family:var(--display);font-size:clamp(17px,calc(var(--aw) * .024),24px);line-height:1.25;color:var(--paper);opacity:.75;max-width:30ch;margin-bottom:6px}
+.port .cover-in{grid-template-columns:minmax(0,1fr);text-align:center}
+.port .cover-txt{justify-items:center}
+.port .deck{justify-content:center}
+.port .cover-cas{width:min(100%,420px)}
+.short .title{font-size:clamp(26px,calc(var(--aw) * .046),44px)}
+.short .sub{font-size:17px}
+
+/* ---------- TELEVISOR Y CONTROL ---------- */
+.page-tv{padding-top:max(10px,var(--st));padding-bottom:8px}
+.tv-intro{display:grid;grid-template-rows:auto minmax(0,1fr);gap:10px}
+/* Aviso de arriba: invita a cambiar de canal (y luego a apagar), con la guía de canales vistos. */
+.tv-tip{justify-self:center;max-width:100%;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:4px 14px;text-align:center;font-family:var(--screen);font-size:24px;line-height:1.1;color:var(--crt);
+  background:#120d11;border:1px solid #3a2e36;border-radius:999px;padding:6px 18px;animation:tip 2.2s ease-in-out infinite}
+.tv-tip b{color:var(--orange);font-weight:400}
+@keyframes tip{50%{box-shadow:0 0 0 3px rgba(166,240,176,.25)}}
+.short .tv-tip{font-size:20px;padding:4px 14px}
+.guia{display:flex;gap:4px}
+.guia i{font-style:normal;font-size:.82em;min-width:1.9em;padding:1px 3px;border-radius:4px;border:1px solid #4b3c46;color:#7a6a75;text-align:center;transition:background .3s,color .3s}
+.guia i.visto{background:var(--crt);border-color:var(--crt);color:#10240f}
+.guia i.ahora{outline:2px solid var(--orange);outline-offset:1px}
+/* --h = alto del TV, lo calcula js/tv.js según el espacio libre. tv.png mide 374x255 (1.4667) y el control 257x442 (0.5814), a 92% del alto del TV. */
+.tv-stage{--h:200px;min-height:0;display:flex;align-items:center;justify-content:center;gap:16px}
+.tv-stage>*{flex:none;position:relative}
+.tvset{height:var(--h);width:calc(var(--h) * 1.4667)}
+.remote{height:calc(var(--h) * .92);width:calc(var(--h) * .92 * .5814)}
+.tv-img,.remote img{position:relative;display:block;width:100%;height:100%;pointer-events:none;user-select:none;-webkit-user-select:none}
+.tv-img{z-index:2;filter:drop-shadow(0 14px 22px rgba(0,0,0,.55))}
+.remote img{filter:drop-shadow(0 10px 18px rgba(0,0,0,.5))}
+.port .tv-stage{flex-direction:column}
+.port .remote{height:calc(var(--h) * .75);width:calc(var(--h) * .75 * .5814)}
+/* La pantalla va detrás del tv.png, en el hueco transparente (x 80-268, y 41-176 de 374x255). */
+.crt{position:absolute;z-index:1;left:21.39%;top:16.08%;width:50.27%;height:52.94%;background:#050605;overflow:hidden;cursor:pointer}
+.feed{position:absolute;inset:0;background:#000}
+.feed video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;background:#000}
+#snow{position:absolute;inset:0;width:100%;height:100%;image-rendering:pixelated;display:none}
+.osd{position:absolute;top:12%;right:10%;font-family:var(--screen);font-size:calc(var(--h) * .058);line-height:.95;text-align:right;color:#5dff6a;text-shadow:0 0 6px #5dff6a,0 0 2px #000;opacity:0;transition:opacity .3s;z-index:3;pointer-events:none}
+.osd small{display:block;font-size:.62em}
+.osd.show{opacity:1}
+/* Apagado a lo antiguo: la imagen se cierra en un círculo hacia el centro y queda un punto brillante que se apaga. */
+.crt.off .feed{animation:crtOff .55s ease-in forwards}
+.crt.off .osd{opacity:0}
+@keyframes crtOff{0%{clip-path:circle(80% at 50% 50%);filter:brightness(1)}35%{filter:brightness(2.2)}100%{clip-path:circle(0% at 50% 50%);filter:brightness(3)}}
+.crt .dot{position:absolute;left:50%;top:50%;width:calc(var(--h) * .037);height:calc(var(--h) * .037);border-radius:50%;background:#fff;box-shadow:0 0 calc(var(--h) * .022) calc(var(--h) * .011) #dff;transform:translate(-50%,-50%) scale(0);opacity:0;pointer-events:none}
+.crt.off .dot{animation:dot 1.4s ease-out .45s both}
+@keyframes dot{0%{opacity:1;transform:translate(-50%,-50%) scale(1)}100%{opacity:0;transform:translate(-50%,-50%) scale(.2)}}
+.crt.boot .feed{animation:crtOn .6s ease-out}
+@keyframes crtOn{0%{clip-path:circle(0% at 50% 50%);filter:brightness(3)}100%{clip-path:circle(80% at 50% 50%);filter:brightness(1)}}
+/* Botones del control: zonas táctiles encima de la imagen (257x442). */
+.rbtn{position:absolute;z-index:2;background:transparent;border:0;border-radius:6px;padding:0}
+.rbtn.press{animation:press .25s ease}
+@keyframes press{50%{background:rgba(255,255,255,.22);box-shadow:inset 0 2px 8px rgba(0,0,0,.7)}}
+.r-pwr{left:23.3%;top:23.5%;width:23.7%;height:10.2%}
+.r-lo{left:14.8%;top:47.1%;width:17.9%;height:9.5%}
+.r-hi{left:35.4%;top:47.1%;width:17.9%;height:9.5%}
+/* Guías: primero brillan LO y HI; después de cambiar de canal, brilla OFF-ON. */
+.remote.teach-ch .r-lo,.remote.teach-ch .r-hi,.remote.teach-pwr .r-pwr{animation:glow 1.6s ease-in-out infinite}
+/* Ya vio todos los canales: OFF-ON late fuerte y dice "¡Apágame!". */
+.remote.teach-pwr .r-pwr{animation:pwrFoco 1s ease-in-out infinite}
+@keyframes pwrFoco{50%{transform:scale(1.15);box-shadow:0 0 0 5px var(--orange),0 0 26px 10px rgba(232,116,42,.75)}}
+.remote.teach-pwr .r-pwr::after{content:"¡Apágame!";position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);white-space:nowrap;
+  font-family:var(--screen);font-size:18px;line-height:1;color:#1b0f06;background:var(--orange);border-radius:6px;padding:3px 7px;pointer-events:none}
+@keyframes glow{50%{box-shadow:0 0 0 3px rgba(232,116,42,.9),0 0 16px 5px rgba(232,116,42,.55)}}
+/* Empujón: HI late más fuerte y muestra "¡Oprime!" encima. */
+.remote.nudge .r-hi{animation:nudge .7s ease-in-out infinite}
+@keyframes nudge{50%{transform:scale(1.18);box-shadow:0 0 0 4px var(--orange),0 0 22px 8px rgba(232,116,42,.7)}}
+.remote.nudge .r-hi::after{content:"¡Oprime!";position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);white-space:nowrap;
+  font-family:var(--screen);font-size:18px;line-height:1;color:#1b0f06;background:var(--orange);border-radius:6px;padding:3px 7px;pointer-events:none}
+/* "A continuación": cintillo que entra por la izquierda con el próximo canal sin ver. */
+.next-up{position:absolute;left:5%;right:5%;bottom:9%;z-index:3;margin:0;font-family:var(--screen);font-size:calc(var(--h) * .048);line-height:1.1;color:#fff;
+  background:linear-gradient(90deg,rgba(232,116,42,.95),rgba(180,70,20,.85));border-radius:4px;padding:.2em .5em;transform:translateX(-115%);transition:transform .45s ease;pointer-events:none}
+.next-up b{font-weight:400;color:#ffe14d}
+.next-up.show{transform:none}
+.crt.off .next-up{display:none}
+/* Aviso en pantalla tipo boletín: rojo si se apaga antes de ver todo, verde al completar los canales. */
+.tv-aviso{position:absolute;inset:0;z-index:4;display:none;place-content:center;text-align:center;padding:6%;
+  font-family:var(--screen);font-size:calc(var(--h) * .075);line-height:1.05;color:#fff;pointer-events:none}
+.tv-aviso small{display:block;margin-top:.45em;font-size:.68em;color:#ffe14d}
+.tv-aviso.show{display:grid;animation:avisoIn .3s ease}
+.tv-aviso.alto{background:rgba(150,16,8,.9)}
+.tv-aviso.listo{background:rgba(10,100,40,.9)}
+@keyframes avisoIn{from{transform:scaleY(.04);filter:brightness(2.5)}}
+/* Sin sonido: aviso grande sobre la pantalla. */
+.mute-tip{display:none;position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:3;margin:0;white-space:nowrap;
+  font-family:var(--screen);font-size:calc(var(--h) * .07);line-height:1;color:#fff;background:rgba(0,0,0,.7);border-radius:6px;padding:.25em .6em;
+  animation:blinkTip 1.2s steps(2,start) infinite;pointer-events:none}
+.crt.muted .mute-tip{display:block}
+.crt.off .mute-tip{display:none}
+@keyframes blinkTip{50%{opacity:.55}}
+
+/* ---------- TRANSICIÓN: DEL TV AL CASETE ---------- */
+.portal-ring{position:absolute;z-index:20;border-radius:50%;pointer-events:none;
+  border:3px solid #eafff0;box-shadow:0 0 24px 8px rgba(200,255,220,.55),inset 0 0 24px 8px rgba(200,255,220,.4)}
+
+/* ---------- RADIOCASETE ---------- */
+/* Pantalla de información: texto a la izquierda y la cuenta 5..1 a la derecha. */
+.lcd{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:10px;background:#9db78e;color:#16240f;font-family:var(--screen);font-size:20px;border-radius:6px;padding:6px 12px;min-height:60px;line-height:1.15;box-shadow:inset 0 0 0 3px #6f8a61}
+.lcd-count{font-size:46px;font-weight:400;line-height:1;text-align:right;font-variant-numeric:tabular-nums}
+.lcd-count.ya{color:#a30d00;animation:blinkTip .5s steps(2,start) infinite}
+.btn.glow{animation:glow 1.6s ease-in-out infinite}
+/* La grabadora (rec.png, 510x423). Teclas: PLAY = primera (x 50-88), REC = roja (x 192-228), y 104-134. */
+.radio{position:relative;justify-self:center;aspect-ratio:510/423;width:min(100%,calc((var(--ah) - var(--deck) - 40px) * 1.2057))}
+.radio img{display:block;width:100%;height:100%;filter:drop-shadow(0 14px 22px rgba(0,0,0,.5));user-select:none;-webkit-user-select:none;pointer-events:none}
+.radio.live img{animation:thump .45s ease-in-out infinite alternate}
+@keyframes thump{to{transform:scale(1.008)}}
+.rkey{position:absolute;top:24.59%;height:7.09%;border:0;padding:0;border-radius:4px;background:transparent;transition:background .15s,box-shadow .15s,transform .15s}
+.r-play{left:9.8%;width:7.45%;pointer-events:none}
+.r-rec{left:37.65%;width:7.06%;cursor:pointer}
+/* Al pasar por encima de REC o al oprimirlo, se resaltan REC y PLAY juntos (así se graba). */
+.radio.armed .rkey{background:rgba(255,255,255,.28);box-shadow:0 0 0 3px var(--orange),0 0 16px 5px rgba(232,116,42,.6);transform:translateY(2px)}
+@media (hover:hover){ .r-rec:hover,.r-rec:hover ~ .r-play{background:rgba(255,255,255,.28);box-shadow:0 0 0 3px var(--orange),0 0 16px 5px rgba(232,116,42,.6)} }
+/* Mientras suena el jingle, REC y PLAY "se oprimen" solos para mostrar qué hay que hacer. */
+.radio.demo .rkey{animation:keyDemo 1.4s ease-in-out infinite}
+@keyframes keyDemo{40%,60%{background:rgba(255,255,255,.28);box-shadow:0 0 0 3px var(--orange),0 0 16px 5px rgba(232,116,42,.6);transform:translateY(2px)}}
+/* ¡Ya! REC parpadea en rojo. */
+.radio.now .r-rec{animation:recNow .5s steps(2,start) infinite}
+@keyframes recNow{50%{box-shadow:0 0 0 4px #ff3b30,0 0 22px 8px rgba(255,59,48,.7)}}
+
+/* ---------- LOS TELÉFONOS NARANJAS ---------- */
+.track-tel{grid-template-columns:minmax(0,6fr) minmax(0,5fr)}
+.relato{display:grid;gap:7px;font-size:15px;line-height:1.38;color:var(--text)}
+.relato p{max-width:60ch}
+.relato .cita{font-family:var(--display);font-size:1.25em;line-height:1.2;color:var(--orange)}
+.short .relato{font-size:13.5px;gap:5px;line-height:1.32}
+/* La foto (tel.png, 645x470). La moneda sale de abajo a la izquierda y cae en la ranura del teléfono (70.5%, 31%). */
+.telfoto{position:relative;justify-self:center;aspect-ratio:645/470;width:min(100%,calc((var(--ah) - var(--deck) - 40px) * 1.3723));border-radius:10px;overflow:hidden;box-shadow:0 14px 26px rgba(0,0,0,.5)}
+.telfoto img{display:block;width:100%;height:100%;object-fit:cover;filter:sepia(.15)}
+.ficha{display:inline-block;width:20px;height:20px;border-radius:50%;background:radial-gradient(circle at 40% 35%,#f2d68a,#a77d26);vertical-align:-4px;margin-right:6px}
+.moneda{position:absolute;left:12%;top:84%;width:7%;aspect-ratio:1;border-radius:50%;background:radial-gradient(circle at 40% 35%,#fff3c4,#e2b84a 45%,#8a6418);box-shadow:0 0 0 2px #7a5512,0 4px 10px rgba(0,0,0,.5);opacity:0;pointer-events:none;z-index:3}
+.telfoto.cae .moneda{animation:moneda .95s cubic-bezier(.5,0,.6,1) forwards}
+@keyframes moneda{0%{opacity:1;left:12%;top:84%;transform:translate(-50%,-50%) scale(1.2) rotateY(0)}
+  55%{opacity:1;left:58%;top:14%;transform:translate(-50%,-50%) scale(1) rotateY(540deg)}
+  100%{opacity:0;left:70.5%;top:31%;transform:translate(-50%,-50%) scale(.35) rotateY(900deg)}}
+.tel-acc{position:absolute;left:4%;bottom:5%;z-index:4}
+.tel-say{position:absolute;left:4%;top:5%;margin:0;z-index:4;font-family:var(--screen);font-size:22px;color:#fff;text-shadow:0 1px 3px #000}
+.tel-pregunta{position:absolute;inset:4% 4% auto 4%;z-index:4;margin:0;padding:.45em .7em;text-align:center;font-family:var(--display);font-size:clamp(18px,calc(var(--ah) * .062),30px);line-height:1.15;color:var(--paper);
+  background:rgba(20,12,18,.82);border:2px solid var(--orange);border-radius:10px;opacity:0;transform:scale(.6);transition:opacity .4s,transform .5s cubic-bezier(.2,1.4,.4,1);pointer-events:none}
+.telfoto.preguntando .tel-pregunta{opacity:1;transform:none}
+.port .track-tel{grid-template-columns:minmax(0,1fr)}
+
+/* ---------- LOS JUEGOS ---------- */
+/* Carrusel: una foto a la vez con su nombre grande tipo calcomanía. */
+.carrusel{position:relative;justify-self:center;aspect-ratio:1.4;width:min(100%,calc((var(--ah) - var(--deck) - 70px) * 1.4));border-radius:14px;overflow:hidden;box-shadow:0 14px 26px rgba(0,0,0,.5);background:#f2d93b}
+.slides{display:flex;height:100%;transition:transform .55s cubic-bezier(.65,0,.35,1)}
+.slide{position:relative;flex:0 0 100%;margin:0;height:100%}
+.slide img{display:block;width:100%;height:100%;object-fit:cover;user-select:none;-webkit-user-select:none}
+.slide figcaption{position:absolute;left:6%;bottom:8%;font-family:var(--display);font-size:clamp(24px,calc(var(--ah) * .09),44px);line-height:1;color:#1b0f06;text-transform:uppercase;
+  background:var(--orange);border:3px solid #1b0f06;border-radius:8px;padding:.15em .4em;box-shadow:5px 5px 0 #1b0f06;transform:rotate(-5deg)}
+.slide.on figcaption{animation:sello .55s cubic-bezier(.2,1.6,.4,1) .25s both}
+@keyframes sello{from{transform:rotate(-20deg) scale(2.2);opacity:0}}
+.car-btn{position:absolute;top:50%;transform:translateY(-50%);width:44px;height:44px;border-radius:50%;border:2px solid #1b0f06;background:rgba(255,255,255,.88);color:#1b0f06;font-size:18px;z-index:2}
+.car-btn:disabled{opacity:0;pointer-events:none}
+.car-prev{left:8px}
+.car-next{right:8px;animation:glow 1.6s ease-in-out infinite}
+/* Mientras falten juegos por ver: la flecha ▶ crece, palpita en naranja y dice "¡Toca aquí!". */
+.carrusel.guiar .car-next{width:56px;height:56px;font-size:22px;background:var(--orange);animation:flechaFoco 1.1s ease-in-out infinite}
+@keyframes flechaFoco{50%{transform:translateY(-50%) scale(1.15);box-shadow:0 0 0 6px rgba(232,116,42,.45),0 0 26px 10px rgba(232,116,42,.6)}}
+.carrusel.guiar .car-next::before{content:"¡Toca aquí!";position:absolute;right:calc(100% + 10px);top:50%;transform:translateY(-50%);white-space:nowrap;pointer-events:none;
+  font-family:var(--screen);font-size:20px;line-height:1;color:#1b0f06;background:#fff;border:2px solid #1b0f06;border-radius:6px;padding:4px 8px;box-shadow:3px 3px 0 #1b0f06}
+.juegos-aviso{font-family:var(--screen);font-size:22px;line-height:1.15;color:var(--crt);animation:soft 2.2s ease-in-out infinite}
+.car-dots{display:flex;justify-content:center;gap:8px}
+.car-dots i{width:10px;height:10px;border-radius:50%;background:#4b3c46;transition:background .3s,transform .3s}
+.car-dots i.visto{background:var(--crt)}
+.car-dots i.on{background:var(--orange);transform:scale(1.3)}
+.pregunta{font-family:var(--display);font-size:clamp(20px,calc(var(--aw) * .028),28px);line-height:1.2;color:var(--orange);animation:sello .55s cubic-bezier(.2,1.6,.4,1) both}
+
+/* ---------- CONECTADO EN EL CHAT ---------- */
+/* msn.png (618x416) difuminada hasta conectarse; luego el chat funciona encima de la ventana de conversación. */
+.msnimg{position:relative;justify-self:center;aspect-ratio:618/416;width:min(100%,calc((var(--ah) - var(--deck) - 40px) * 1.4856));border-radius:6px;overflow:hidden;box-shadow:0 14px 26px rgba(0,0,0,.5);
+  font-family:Tahoma,Verdana,sans-serif;font-size:clamp(10px,calc(var(--ah) * .03),14px);color:#1a1a1a}
+.msnimg>img{display:block;width:100%;height:100%;transition:filter 1s ease}
+.msnimg.off>img{filter:blur(5px) saturate(.6) brightness(.85)}
+.msnimg .msn-log{position:absolute;left:45.95%;top:33.41%;width:36.57%;height:23.32%;overflow-y:auto;padding:3px 5px;display:grid;align-content:start;gap:2px;background:#fff;line-height:1.25}
+.msn-log .me{color:#1b5e20}
+.msn-log .sys{color:#8a8a8a;font-style:italic}
+.msn-log .bz{color:#c0392b;font-weight:700}
+.msnimg .msn-in{position:absolute;left:45.95%;top:62.74%;width:36.57%;height:12.74%;margin:0}
+.msn-in textarea{position:absolute;left:0;top:0;width:80%;height:100%;resize:none;border:0;padding:3px 5px;font:inherit;line-height:1.25;background:#fff;color:#1a1a1a}
+.msn-in textarea:focus-visible{outline:2px solid #3d8bf2;outline-offset:0}
+/* El botón Send de la imagen se vuelve el de enviar. */
+.msn-send{position:absolute;left:81%;top:5.7%;width:18.1%;height:50.9%;border:0;padding:0;background:transparent;border-radius:3px;cursor:pointer}
+.msn-send:hover,.msn-send:focus-visible{background:rgba(61,139,242,.18);outline:2px solid #3d8bf2;outline-offset:0}
+.msnimg.off .msn-log,.msnimg.off .msn-in{visibility:hidden}
+/* Ventanita de conexión telefónica, tipo Windows XP. */
+.dialup{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(88%,300px);border-radius:7px 7px 3px 3px;overflow:hidden;background:#ece9d8;box-shadow:0 10px 30px rgba(0,0,0,.55);z-index:3;transition:opacity .5s,transform .5s}
+.msnimg:not(.off) .dialup{opacity:0;transform:translate(-50%,-50%) scale(.85);pointer-events:none}
+.dialup-bar{background:linear-gradient(#3d8bf2,#0c55d8 45%,#0a47b8);color:#fff;font-weight:700;padding:5px 10px;font-size:13px}
+.dialup-body{display:grid;gap:10px;padding:12px;font-size:13px}
+.dialup-body p{margin:0;min-height:2.5em}
+.dialup-body .num{font-size:1.35em;font-weight:700;letter-spacing:.04em}
+.dialup-prog{height:12px;border:1px solid #888;background:#fff;padding:1px}
+.dialup-prog i{display:block;height:100%;width:0;background:repeating-linear-gradient(90deg,#2bb04a 0 8px,transparent 8px 10px)}
+.dialup-btn{justify-self:center;font:inherit;font-weight:700;font-size:15px;padding:8px 16px;border:1px solid #003c74;border-radius:4px;background:linear-gradient(#fff,#e3e1d4);color:#1a1a1a;animation:glow 1.6s ease-in-out infinite}
+.dialup-btn:disabled{animation:none;opacity:.6}
+@keyframes shake{0%,100%{transform:translate(0)}20%{transform:translate(-8px,3px)}40%{transform:translate(7px,-4px)}60%{transform:translate(-6px,-2px)}80%{transform:translate(5px,4px)}}
+
+/* ---------- EL PRIMER CELULAR ---------- */
+.track-cel{grid-template-columns:minmax(0,7fr) minmax(0,4fr)}
+/* Nokia 1100 (268x543): alto de la página; vibra mientras suena el tono. */
+.n1100{--ph:min(calc(var(--ah) - var(--deck) - 40px),520px);position:relative;justify-self:center;height:var(--ph);width:calc(var(--ph) * .4936)}
+.n1100 img{display:block;width:100%;height:100%;filter:drop-shadow(0 14px 22px rgba(0,0,0,.55));user-select:none;-webkit-user-select:none}
+.n1100.ring{animation:vibra .12s linear infinite}
+@keyframes vibra{25%{transform:translateX(-2px) rotate(-1.2deg)}75%{transform:translateX(2px) rotate(1.2deg)}}
+/* Pantalla de mensaje: se prende encima de la pantalla original de la imagen, en (55,124)-(218,242). */
+.n1100-scr{position:absolute;left:20.52%;top:22.84%;width:60.82%;height:21.73%;border-radius:3px;overflow:hidden;padding:3% 5%;display:flex;flex-direction:column;gap:2px;
+  background:linear-gradient(#b9ceb6,#a3b9a0);color:#1c2a1a;font-family:var(--screen);font-size:calc(var(--ph) * .044);line-height:1.05;opacity:0;transition:opacity .5s}
+.n1100.on .n1100-scr{opacity:1}
+.n1100-scr .top{display:flex;justify-content:space-between;gap:4px;white-space:nowrap;font-size:.72em;border-bottom:1px solid rgba(28,42,26,.4)}
+#celSay:empty{display:none}
+#celTxt{flex:1;overflow:hidden;overflow-wrap:anywhere}
+.smsbox{display:grid;gap:8px}
+.smsbox label{font-size:14px;color:var(--muted)}
+.short .smsbox{gap:6px}
+.short .smsbox textarea{min-height:58px;font-size:18px}
+.smsbox textarea{width:100%;min-height:90px;resize:vertical;background:#1a1418;color:var(--text);border:1px solid #5a4652;border-radius:8px;padding:8px;font-family:var(--screen);font-size:20px}
+.count{font-family:var(--screen);font-size:20px;color:var(--crt);font-variant-numeric:tabular-nums}
+.count.over{color:#ff7b6b}
+
+/* ---------- EL INTERNET DE CENTRO SUBA ---------- */
+.track-ciber{grid-template-columns:minmax(0,4fr) minmax(0,7fr)}
+/* Pantalla del PC (4:3): cyber.png recortada al centro; al activarse aparece cyberwin.jpg encima. */
+.ciber-pc{position:relative;aspect-ratio:4/3;width:min(100%,calc((var(--ah) - var(--deck) - 130px) * 1.3333));border:6px solid #2a2a2e;border-radius:10px;overflow:hidden;background:#000;box-shadow:0 14px 26px rgba(0,0,0,.5)}
+.ciber-pc img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.ciber-pc .win{opacity:0;transition:opacity .8s ease}
+.ciber-pc.activo .win{opacity:1;animation:pcOn .6s ease}
+@keyframes pcOn{0%{filter:brightness(2.5)}100%{filter:none}}
+/* Control del dueño (cyber-contador.png, 568x139). */
+.ciberctl{--cw:1;position:relative;width:100%;aspect-ratio:568/139;border-radius:4px;overflow:hidden;box-shadow:0 14px 26px rgba(0,0,0,.5)}
+.ciberctl img{display:block;width:100%;height:100%}
+/* Fila 3 activa: un recorte de la fila 2 (x 30-537) puesto sobre la 3, con hora de inicio y contador propios. */
+.fila3{display:none;position:absolute;left:5.28%;top:52.52%;width:89.26%;height:11.15%;
+  background:url("../images/cyber-contador.png") no-repeat;background-size:112.03% auto;background-position:49.18% 46.56%;
+  font-family:"Microsoft Sans Serif","MS Sans Serif",Tahoma,Arial,sans-serif;font-weight:700;font-size:calc(var(--cw) * 7.6px);color:#f4f4f4}
+.ciberctl.activo .fila3{display:block;animation:pcOn .5s ease}
+.fila3 span{position:absolute;top:8%;height:84%;display:flex;align-items:center;justify-content:center;background:rgb(3,1,124);white-space:nowrap}
+.c-ini{left:.3%;width:11.3%}
+.c-cont{left:12.1%;width:11.1%;font-variant-numeric:tabular-nums}
+/* «Sin usar» (x 149-209, y 73-88): brilla y dice "¡Toca aquí!" hasta que se toca. */
+.sinusar{position:absolute;left:26.2%;top:52.6%;width:10.7%;height:11.2%;border:0;padding:0;background:transparent;border-radius:2px;cursor:pointer;animation:glow 1.3s ease-in-out infinite}
+.sinusar::after{content:"¡Toca aquí!";position:absolute;left:50%;top:calc(100% + 6px);transform:translateX(-50%);white-space:nowrap;pointer-events:none;
+  font-family:var(--screen);font-size:18px;line-height:1;color:#1b0f06;background:var(--orange);border:2px solid #1b0f06;border-radius:6px;padding:3px 7px}
+.ciberctl.activo .sinusar{display:none}
+.ciberctl:not(.activo){overflow:visible}
+
+/* ---------- FOTOS PARA REVELAR ---------- */
+/* El rollo va a la izquierda y el texto a la derecha. */
+.track-fotos{grid-template-columns:minmax(0,6fr) minmax(0,5fr)}
+.track-fotos .track-body{order:-1}
+.port .track-fotos .track-body{order:0}
+/* cinta.png (488x355): los 5 cuadros están entre y 146 y 196 (top 41.13%, alto 14.08%). */
+.rollo{position:relative;justify-self:center;aspect-ratio:488/355;width:min(100%,calc((var(--ah) - var(--deck) - 40px) * 1.3746))}
+.rollo>img{display:block;width:100%;height:100%;filter:drop-shadow(0 14px 22px rgba(0,0,0,.5))}
+.cuadro{position:absolute;top:41.13%;height:14.08%;overflow:hidden}
+/* La foto se ve como en el negativo del rollo: colores invertidos y la máscara naranja de la película.
+   Aparece desde negro (las dos listas de filtros tienen las mismas funciones para que la transición sea suave). */
+.cuadro img{display:block;width:100%;height:100%;object-fit:cover;transform:scale(1.15);transition:filter 3s ease,transform 1s ease;
+  filter:invert(1) grayscale(.85) contrast(.9) brightness(0)}
+.cuadro img.dev{filter:invert(1) grayscale(.85) contrast(.9) brightness(1.1);transform:none}
+.cuadro.con-foto::after{content:"";position:absolute;inset:0;background:rgb(222,128,52);mix-blend-mode:multiply;opacity:.85;pointer-events:none}
+.upl{display:inline-flex;align-items:center;gap:8px;cursor:pointer}
+.upl input{position:absolute;opacity:0;width:1px;height:1px}
+
+/* ---------- PISTA OCULTA: PASTEL + INVITACIÓN ---------- */
+.page.finale{background:radial-gradient(circle at 30% 10%,#3d2a1e,var(--bg) 70%)}
+.finale-in{width:min(100%,980px);margin:auto;display:grid;grid-template-columns:minmax(0,4fr) minmax(0,7fr);gap:16px 32px;align-items:center}
+.fin-cake{display:grid;justify-items:center}
+/* pastel.png (1177x1337): alto de la página, el ancho sale solo */
+.pastel{display:block;height:min(calc(var(--ah) - var(--deck) - 40px),440px);width:auto;max-width:100%;object-fit:contain;filter:drop-shadow(0 14px 22px rgba(0,0,0,.55))}
+.fin-inv{display:grid;gap:10px;justify-items:start}
+.fin-inv .lado{font-family:var(--screen);font-size:22px;color:var(--orange)}
+.fin-inv h2{font-family:var(--display);font-size:clamp(26px,calc(var(--aw) * .042),42px);line-height:1.1;color:var(--paper);font-weight:400}
+.inv-sub{font-family:var(--display);font-size:clamp(17px,calc(var(--aw) * .024),24px);line-height:1.2;color:var(--orange)}
+.inv{display:grid;grid-template-columns:auto 1fr;gap:4px 14px;margin:0}
+.inv dt{font-family:var(--screen);font-size:21px;line-height:1.2;color:var(--orange)}
+.inv dd{margin:0;font-weight:500}
+.inv-conf{font-weight:700;color:var(--crt)}
+.port .finale-in{grid-template-columns:minmax(0,1fr)}
+.port .fin-inv{justify-items:center;text-align:center}
+.port .pastel{height:min(calc(var(--ah) * .46),320px)}
+.short .fin-inv{gap:6px}
+.short .fin-inv .lado{font-size:19px}
+.short .fin-inv h2{font-size:clamp(22px,calc(var(--aw) * .034),32px)}
+.short .inv-sub{font-size:17px}
+.short .inv dt{font-size:18px}
+.short .inv dd,.short .inv-conf{font-size:14px}
+#confetti{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:50}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+}

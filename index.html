@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#1a1319">
+<title>Harrison 40 · Grandes éxitos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&family=VT323&family=Rubik:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<!-- AVISO: GIRAR EL CELULAR (primera pantalla, 15 s) -->
+<div class="rotate" id="rotate" role="dialog" aria-modal="true" aria-labelledby="rotTitle">
+  <div class="rot-phone" aria-hidden="true"></div>
+  <h1 id="rotTitle">Gira tu celular</h1>
+  <p class="rot-txt">Pon el celular de lado y sube el volumen. Aunque tu pantalla no gire sola, la invitación se acomoda.</p>
+  <p class="rot-ok">¡Así quedó perfecto!</p>
+  <p class="rot-pc">Esta invitación tiene sonido. Dale a Continuar cuando estés listo.</p>
+  <div class="rot-count" aria-live="off"><b id="rotNum">15</b><span>segundos</span></div>
+  <button class="deckbtn primary" id="rotGo">Continuar ▶</button>
+</div>
+
+<div class="app">
+<main class="tape" id="tape">
+
+  <!-- EL TELEVISOR (intro: arranca después del aviso; al apagarlo se pasa al casete y no se vuelve) -->
+  <section class="page page-tv on" id="p-tv" data-side="intro">
+    <div class="tv-intro">
+      <div class="tv-tip">
+        <span id="tvHint" aria-live="polite">¡Cambia de canal con los botones <b>LO</b> y <b>HI</b> del control!</span>
+        <span class="guia" id="tvGuia" aria-label="Canales vistos"></span>
+      </div>
+      <div class="tv-stage">
+        <div class="tvset">
+          <div class="crt" id="crt">
+            <div class="feed">
+              <video id="tvVid" playsinline webkit-playsinline loop preload="none"></video>
+              <canvas id="snow" width="160" height="120"></canvas>
+            </div>
+            <div class="osd" id="osd"></div>
+            <p class="mute-tip">🔇 Toca aquí para oír</p>
+            <p class="next-up" id="nextUp"></p>
+            <div class="tv-aviso" id="tvAviso" role="alert"></div>
+            <span class="dot"></span>
+          </div>
+          <img class="tv-img" src="images/tv.png" alt="Televisor de los 80s con mueble plateado">
+        </div>
+        <div class="remote teach-ch" id="remote">
+          <img src="images/tv-control.png" alt="Control remoto con botón de apagar y botones de canal LO y HI">
+          <button class="rbtn r-pwr" id="rPwr" aria-label="Apagar el televisor"></button>
+          <button class="rbtn r-lo" id="rLo" aria-label="Canal anterior"></button>
+          <button class="rbtn r-hi" id="rHi" aria-label="Canal siguiente"></button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PORTADA: el casete con los carretes girando -->
+  <section class="page cover" id="p-portada" data-side="0">
+    <div class="cover-in">
+      <div class="cover-cas">
+        <div class="cas"><img src="images/casete-abierto.png" alt="Casete abierto con los carretes girando"><i class="hub l"></i><i class="hub r"></i></div>
+      </div>
+      <div class="cover-txt">
+        <h1 class="title">Grandes <b>40</b> éxitos de Harrison!</h1>
+        <p class="sub">Una mezcla grabada a mano con 40 años de recuerdos y una invitación al final.</p>
+        <div class="deck">
+          <button class="deckbtn primary" id="playBtn">▶ PLAY</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LAS PISTAS (seguidas, sin lados) -->
+  <section class="page" id="p-radio" data-side="cinta" data-label="PISTA 1">
+    <article class="track">
+      <div class="track-head">
+        <h3><span class="n">Pista 1</span> Grabar de la radio</h3>
+        <p class="desc">Prende el radio y oprime REC justo cuando la cuenta llegue a cero, antes de que el locutor vuelva a hablar encima.</p>
+        <div class="lcd" aria-live="polite"><span id="radioLcd">Casete virgen de 90 minutos listo.</span><b class="lcd-count" id="radioCount"></b></div>
+        <p class="say" id="radioSay" aria-live="polite"></p>
+        <div class="btnrow">
+          <button class="btn hot glow" id="radioOn">📻 Prender el radio</button>
+          <button class="btn" id="radioRestart" hidden>⟲ Reiniciar</button>
+          <button class="btn hot" id="radioNext" hidden>Siguiente pista ▸</button>
+        </div>
+      </div>
+      <div class="track-body">
+        <!-- La grabadora: REC (tecla roja) y PLAY (primera tecla) son zonas táctiles encima de la imagen (510x423). -->
+        <div class="radio" id="radio">
+          <img src="images/rec.png" alt="Grabadora de casete con radio AM/FM">
+          <button class="rkey r-rec" id="radioRec" aria-label="REC: grabar"></button>
+          <span class="rkey r-play" aria-hidden="true"></span>
+        </div>
+      </div>
+    </article>
+  </section>
+
+  <section class="page" id="p-tel" data-side="cinta" data-label="PISTA 2">
+    <article class="track track-tel">
+      <div class="track-head">
+        <h3><span class="n">Pista 2</span> Los teléfonos naranjas</h3>
+        <div class="relato">
+          <p>Estaban en todas las esquinas de Bogotá, firmes bajo la lluvia, esperándonos.</p>
+          <p>No tenían pantalla ni contactos guardados. No hacían falta: los números nos los sabíamos de memoria. El de la casa, el del mejor amigo, el de la niña que nos gustaba y que marcábamos con el corazón en la garganta, rogando que no contestara el papá.</p>
+          <p>Una moneda pequeña y fría, apretada en la mano todo el camino hasta la esquina, como si fuera un tesoro. Porque lo era: valía tres minutos de mundo.</p>
+          <p>Y si hoy pudiera echar una moneda y llamar al pasado diría una sola cosa antes de que se corte la línea:</p>
+          <p class="cita">“Tranquilo, amig@. Lo mejor está por venir.”</p>
+        </div>
+      </div>
+      <div class="track-body">
+        <!-- La foto con la moneda: la ficha vuela desde el botón hasta la ranura del teléfono (en % de tel.png, 645x470). -->
+        <div class="telfoto" id="telFoto">
+          <img src="images/tel.png" alt="Foto de los 80s: un niño con gafas oscuras llamando desde un teléfono público naranja en una esquina de Bogotá">
+          <span class="moneda" id="moneda" aria-hidden="true"></span>
+          <p class="tel-say" id="callSay" aria-live="polite"></p>
+          <p class="tel-pregunta" id="telPregunta">¿A quién llamarías hoy desde este teléfono?</p>
+          <div class="tel-acc">
+            <button class="btn hot glow" id="fichaBtn"><span class="ficha"></span>Insertar moneda</button>
+            <button class="btn hot" id="telNext" hidden>Siguiente pista ▸</button>
+          </div>
+        </div>
+      </div>
+    </article>
+  </section>
+
+  <section class="page" id="p-juegos" data-side="cinta" data-label="PISTA 3">
+    <article class="track">
+      <div class="track-head">
+        <h3><span class="n">Pista 3</span> Los juegos</h3>
+        <p class="desc">Si usted jugó alguno de estos juegos, toca decirle la verdad: la cédula ya pesa más de lo normal.</p>
+        <p class="desc">Pero tranquilo, también significa que tuvo una infancia brutal llena de amigos y trasnochadas.</p>
+        <p class="juegos-aviso" id="juegosAviso">👉 Mira todos los juegos del carrete para descubrir la siguiente pista.</p>
+        <p class="pregunta" id="juegosPregunta" hidden>¿Cuál faltó en esta lista de juegos legendarios?</p>
+        <div class="btnrow"><button class="btn hot" id="juegosNext" hidden>Siguiente pista ▸</button></div>
+      </div>
+      <div class="track-body">
+        <!-- Carrusel: se arma desde JUEGOS (js/contenido.js); pasa solo cada pocos segundos y también con las flechas o deslizando. -->
+        <div class="carrusel guiar" id="carrusel" aria-roledescription="carrusel">
+          <div class="slides" id="slides"></div>
+          <button class="car-btn car-prev" id="carPrev" aria-label="Juego anterior">◀</button>
+          <button class="car-btn car-next" id="carNext" aria-label="Juego siguiente">▶</button>
+        </div>
+        <div class="car-dots" id="carDots"></div>
+      </div>
+    </article>
+  </section>
+
+  <section class="page" id="p-chat" data-side="cinta" data-label="PISTA 4">
+    <article class="track">
+      <div class="track-head">
+        <h3><span class="n">Pista 4</span> Conectado en el chat</h3>
+        <p class="desc" id="chatDesc">Antes de chatear había que conectarse a internet... y rogar que nadie levantara el teléfono de la casa.</p>
+        <div class="btnrow">
+          <button class="btn hot glow" id="buzzBtn" hidden>📳 Enviar zumbido</button>
+          <button class="btn hot" id="chatNext" hidden>Siguiente pista ▸</button>
+        </div>
+      </div>
+      <div class="track-body">
+        <!-- msn.png (618x416) difuminada hasta conectarse. Después, el chat funciona encima de la ventana de conversación:
+             historial en (284,139)-(509,235), caja de texto en (284,261)-(465,313), botón Send en (467,264)-(508,291). -->
+        <div class="msnimg off" id="msnImg">
+          <img src="images/msn.png" alt="Ventanas de Messenger en un escritorio de Windows: la lista de contactos y una conversación">
+          <div class="msn-log" id="msnLog" aria-live="polite">
+            <div><b>~*El Parcero*~</b> dice: q mas harrison!! ya llego el sabado</div>
+            <div><b>~*El Parcero*~</b> dice: ¿vamos a la rumba o qué?</div>
+          </div>
+          <form class="msn-in" id="msnForm">
+            <textarea id="msnInput" aria-label="Escribe un mensaje" placeholder="Escribe aquí y oprime Send..." maxlength="120" rows="2"></textarea>
+            <button type="submit" class="msn-send" aria-label="Enviar mensaje"></button>
+          </form>
+          <!-- Ventanita de conexión telefónica (tipo Windows XP) -->
+          <div class="dialup" id="dialup" role="dialog" aria-labelledby="dialTitle">
+            <div class="dialup-bar" id="dialTitle">Conexión a Internet</div>
+            <div class="dialup-body">
+              <p id="dialSay">Su equipo no está conectado a Internet.</p>
+              <div class="dialup-prog"><i id="dialProg"></i></div>
+              <button class="dialup-btn" id="dialBtn">🌐 Conectar a internet</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </article>
+  </section>
+
+  <section class="page" id="p-cel" data-side="cinta" data-label="PISTA 5">
+    <article class="track track-cel">
+      <div class="track-head">
+        <h3><span class="n">Pista 5</span> El primer celular</h3>
+        <p class="desc">160 caracteres por mensaje y el saldo contado. Para avisar que llegaste, mejor botar una perdida.</p>
+        <p class="say" id="celSay" aria-live="polite"></p>
+        <div class="smsbox" id="smsBox" hidden>
+          <label for="smsTxt">Mensaje de texto</label>
+          <textarea id="smsTxt">q mas! ya llgue a la casa. mñn nos vms en el ciber a las 3. bye</textarea>
+          <span class="count" id="smsCount"></span>
+          <div class="btnrow">
+            <button class="btn" id="smsSend">Enviar SMS</button>
+            <button class="btn hot glow" id="perdidaBtn">📞 Botar una perdida</button>
+            <button class="btn hot" id="celNext" hidden>Siguiente pista ▸</button>
+          </div>
+        </div>
+      </div>
+      <div class="track-body">
+        <!-- Nokia 1100 (268x543). Al llegar se ve su pantalla original; después se prende encima la de mensaje, en (55,124)-(218,242). -->
+        <div class="n1100" id="n1100">
+          <img src="images/1100.png" alt="Celular Nokia 1100 con su pantalla original">
+          <div class="n1100-scr" id="celScr" aria-live="polite">
+            <div class="top"><span>▮▮▮</span><span id="celSaldo">Saldo $2.000</span></div>
+            <div id="celTxt">Harrison<br>12:00</div>
+          </div>
+        </div>
+      </div>
+    </article>
+  </section>
+
+  <section class="page" id="p-ciber" data-side="cinta" data-label="PISTA 6">
+    <article class="track track-ciber">
+      <div class="track-head">
+        <h3><span class="n">Pista 6</span> El internet de Centro Suba...</h3>
+        <!-- La pantalla del PC: cyber.png mientras está "Sin usar"; al pedirlo cambia a cyberwin.jpg. -->
+        <div class="ciber-pc" id="ciberPc">
+          <img src="images/cyber.png" alt="Pantalla del computador del ciber: Control de Ciber">
+          <img class="win" src="images/cyberwin.jpg" alt="Escritorio de Windows del ciber con el tiempo y el valor corriendo">
+        </div>
+      </div>
+      <div class="track-body">
+        <p class="say" id="cbSay" aria-live="polite">Pide un computador: toca «Sin usar» en la línea 3 del control del ciber.</p>
+        <!-- El control del dueño (cyber-contador.png, 568x139). Filas de 15,5 px: la 2 en y 57,5-73, la 3 en y 73-88,5.
+             "Sin usar" (x 149-209) se vuelve una fila igual a las de arriba y abajo: la fila 2 copiada, con hora y contador propios. -->
+        <div class="ciberctl" id="ciberCtl">
+          <img src="images/cyber-contador.png" alt="Control de Ciber: la lista de computadores con su hora de inicio, contador y estado">
+          <div class="fila3" aria-hidden="true"><span class="c-ini" id="cbIni"></span><span class="c-cont" id="cbCont">0:00:00</span></div>
+          <button class="sinusar" id="sinUsar" aria-label="Sin usar: pedir el computador de la línea 3"></button>
+        </div>
+        <div class="btnrow"><button class="btn hot" id="ciberNext" hidden>Siguiente pista ▸</button></div>
+      </div>
+    </article>
+  </section>
+
+  <section class="page" id="p-fotos" data-side="cinta" data-label="PISTA 7">
+    <article class="track track-fotos">
+      <div class="track-head">
+        <h3><span class="n">Pista 7</span> Fotos para revelar</h3>
+        <p class="desc">Antes las fotos se veían días después, al recogerlas en el laboratorio. Elige fotos tuyas de esa época y míralas como se veían en el negativo del rollo. Solo se ven en tu pantalla, no se suben a ningún lado.</p>
+        <div class="btnrow">
+          <label class="btn hot glow upl" for="photoIn" id="fotosBtn">📷 Elegir fotos<input type="file" id="photoIn" accept="image/*" multiple></label>
+          <button class="btn hot" id="fotosNext">Siguiente pista ▸</button>
+        </div>
+      </div>
+      <div class="track-body">
+        <!-- El rollo (cinta.png, 488x355): 5 cuadros entre y 146 y 196; en x 0-72, 74-150, 152-228, 230-303 y 306-376.
+             Cada foto elegida entra en el siguiente cuadro y se "revela". -->
+        <div class="rollo" id="rollo">
+          <img src="images/cinta.png" alt="Una mano sosteniendo un rollo de negativos de fotos">
+          <div class="cuadro" style="left:0%;width:14.75%"></div>
+          <div class="cuadro" style="left:15.16%;width:15.57%"></div>
+          <div class="cuadro" style="left:31.15%;width:15.57%"></div>
+          <div class="cuadro" style="left:47.13%;width:14.96%"></div>
+          <div class="cuadro" style="left:62.70%;width:14.34%"></div>
+        </div>
+      </div>
+    </article>
+  </section>
+
+  <!-- PISTA OCULTA: pastel + invitación -->
+  <section class="page finale" id="p-final" data-side="cinta" data-label="PISTA OCULTA">
+    <div class="finale-in">
+      <div class="fin-cake">
+        <img class="pastel" src="images/pastel.png" alt="Pastel de cumpleaños de dos pisos con el número 40, flores amarillas y detalles dorados">
+      </div>
+      <div class="fin-inv">
+        <span class="lado">Pista oculta · Invitación</span>
+        <h2>Lo conseguiste... ¡Bienvenido a mi fiesta!!!</h2>
+        <p class="inv-sub">Rifas, juegos y espectáculos.</p>
+        <dl class="inv" id="inv"></dl>
+        <p class="inv-conf" id="invConf"></p>
+        <div class="btnrow">
+          <a class="btn hot" id="rsvp" target="_blank" rel="noopener" hidden>✅ Confirmar por WhatsApp</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- REPRODUCTOR: avanza y retrocede pista por pista -->
+<nav class="deckbar intro" id="deckbar" aria-label="Reproductor del casete">
+  <p class="dk-msg" id="dkMsg">Pasa por <b>todos los canales</b> y luego apaga el TV con OFF-ON para que empiece la fiesta ▸</p>
+  <button class="dk" id="prevBtn" aria-label="Pista anterior">⏪</button>
+  <div class="dk-mid">
+    <div class="minireels" aria-hidden="true"><i class="mr-l"></i><i class="mr-r"></i></div>
+    <div class="dk-info">
+      <div class="dk-prog"><i id="dkProg"></i></div>
+    </div>
+  </div>
+  <button class="dk" id="nextBtn" aria-label="Pista siguiente">⏩</button>
+  <button class="chip" id="soundBtn" aria-pressed="true">Sonido: sí</button>
+</nav>
+<canvas id="confetti"></canvas>
+</div>
+
+<script src="js/utils.js"></script>
+<script src="js/horizontal.js"></script>
+<script src="js/contenido.js"></script>
+<script src="js/cinta.js"></script>
+<script src="js/tv.js"></script>
+<script src="js/lado-a.js"></script>
+<script src="js/lado-b.js"></script>
+<script src="js/final.js"></script>
+</body>
+</html>
