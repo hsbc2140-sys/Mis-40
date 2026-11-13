@@ -65,13 +65,28 @@ $('#radioRec').addEventListener('click', ()=>{
   rAcciones(false,true,rOk);
 });
 // Prender: el toque desbloquea los dos audios (iPhone lo exige) y arranca.
+// La canción suena al doble de volumen: pasa por una ganancia x2 y un limitador para que no se distorsione.
+// Solo en la página publicada (http/https): abierta con doble clic (file://) el navegador la dejaría muda, así que ahí suena normal.
+let cancionGain=null;
+function amplificarCancion(){
+  if(cancionGain || !/^https?:$/.test(location.protocol)) return;
+  const ctx=actx(); if(!ctx) return;
+  try{
+    const lim=ctx.createDynamicsCompressor();
+    lim.threshold.value=-3; lim.knee.value=0; lim.ratio.value=20; lim.attack.value=.003; lim.release.value=.1;
+    cancionGain=ctx.createGain(); cancionGain.gain.value=2;
+    ctx.createMediaElementSource(cancion).connect(cancionGain).connect(lim).connect(ctx.destination);
+  }catch(e){ cancionGain=null; }
+}
 $('#radioOn').addEventListener('click', ()=>{
   [jingle,cancion].forEach(a=>{ a.preload='auto'; const pr=a.play(); a.pause(); if(pr) pr.catch(()=>{}); });
-  rArrancar();
+  amplificarCancion(); rArrancar();
 });
+// Botón invisible en la cuenta: tocar el "¡YA!" hace exactamente lo mismo que la tecla roja REC.
+$('#radioCount').addEventListener('click', ()=>$('#radioRec').click());
 $('#radioRestart').addEventListener('click', rArrancar);
 $('#radioNext').addEventListener('click', ()=>step(1));
-$('#soundBtn').addEventListener('click', ()=>{ jingle.muted=cancion.muted=!soundOn; });
+$('#soundBtn').addEventListener('click', ()=>{ jingle.muted=cancion.muted=!soundOn; if(cancionGain) cancionGain.gain.value=soundOn?2:0; });
 cerrar('p-radio');
 onPage('p-radio', {
   enter(){ if(cancion.preload==='none'){ cancion.preload='auto'; cancion.load(); } },

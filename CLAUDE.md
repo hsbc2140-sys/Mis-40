@@ -10,14 +10,16 @@ y al final una pista oculta con las velas y los datos de la fiesta.
 2. TV (`data-side="intro"`, se ve una sola vez): arranca en el primer canal de `CANALES` (Rugrats); LO/HI cambian de canal.
    Arriba, la invitación a cambiar de canal y la guía de canales vistos; abajo, la barra pide pasar por todos y luego apagar.
    OFF-ON solo funciona tras ver los 6 canales; antes sale en la pantalla "¡ESPERA! Te faltan N canales…".
-   Empujón: tras 7 s en un canal sale "A CONTINUACIÓN ▸ Canal…" y HI dice "¡Oprime!". Al completar, aviso verde y OFF-ON late con el globito "¡Apágame!".
+   Empujón: tras 7 s en un canal sale "A CONTINUACIÓN ▸ Canal…" y HI muestra el globito neón "Oprime para cambiar canal".
+   Al completar, una franja verde abajo de la pantalla del TV (no la tapa, se queda hasta apagar) y OFF-ON late con "Apágame para ir a la fiesta".
    OFF-ON apaga el TV y lanza la transición `portal()` (la sala se mete en el punto de luz y un círculo se abre mostrando el casete).
 3. Portada: "Grandes 40 éxitos de Harrison!" con el casete abierto y los carretes girando → PLAY. No hay atajo a la invitación.
 4. Pistas seguidas (`data-side="cinta"`): 1 radio, 2 teléfonos naranjas, 3 juegos, 4 chat, 5 celular, 6 internet de Centro Suba, 7 fotos, y la pista oculta (pastel + invitación).
    Las pistas 1 a 6 están cerradas (`cerrar(id)`) hasta completarlas; entonces aparece su botón "Siguiente pista" y se habilita ⏩.
    La 7 (fotos) no obliga a nada.
    - 1 radio: Prender → estática → jingle → canción; la pantalla cuenta 5..1 y REC sale bien entre los segundos 5 y 8 (`RADIO.ventana`).
-     Bien → "Siguiente pista"; temprano o tarde → "Reiniciar".
+     Bien → "Siguiente pista"; temprano o tarde → "Reiniciar". La cuenta ("¡YA!") es también un botón invisible que hace lo mismo que REC.
+     La canción suena al doble de volumen (ganancia x2 + limitador con Web Audio), solo por http/https: con file:// suena normal.
    - 2 teléfonos naranjas: relato a la izquierda, foto `tel.png` a la derecha. "Echar la ficha": la moneda vuela a la ranura, tono,
      sale "¿A quién llamarías hoy desde este teléfono?" y a los 3 s se abre la pista.
    - 3 juegos: carrusel con `JUEGOS` (nombre grande tipo calcomanía), pasa solo cada 3,5 s o con flechas/deslizando.
@@ -34,8 +36,12 @@ y al final una pista oculta con las velas y los datos de la fiesta.
    - 7 fotos: el rollo `cinta.png` a la izquierda con 5 cuadros; cada foto elegida entra en el siguiente cuadro y se ve
      como en el negativo (invertida, casi monocroma y con la máscara naranja de la película), apareciendo desde negro.
      Subir fotos es opcional: "Elegir fotos" y "Siguiente pista" están lado a lado desde el inicio.
-   - Pista oculta: `pastel.png` + "Lo conseguiste... ¡Bienvenido a mi fiesta!!!" con los datos de `FIESTA` y el botón de WhatsApp
-     (`FIESTA.whatsapp`, enlace completo). Al llegar la primera vez sale confeti. Es la última página: no tiene botón de volver a empezar.
+   - Pista oculta (3 columnas): `pastel.png` a la izquierda, al centro "Lo conseguiste... ¡Bienvenido a mi fiesta!!!" en un panel
+     oscuro translúcido, y a la derecha la ruleta "🎁 Regalo sorpresa" (8 casillas "?"). Fondo `hbd.jpeg` con velo oscuro.
+     La ruleta gira sola 1,8 s después de llegar (y otra vez al tocar GIRAR); siempre para centrada en una casilla y debajo sale
+     el cuadro "¡Lluvia de sobres! 💌" con una explosión de confeti. El confeti (lluvia y explosiones) usa un solo lienzo: `soltar()` en final.js.
+     El panel muestra los datos de `FIESTA` y el botón de WhatsApp (`FIESTA.whatsapp`, enlace completo).
+     Al llegar la primera vez cae confeti. Es la última página: no tiene botón de volver a empezar.
 La barra de abajo (⏪ ⏩, carretes, línea de avance y sonido; sin texto ni contador) mueve pista por pista, también deslizando o con las flechas,
 y no avanza en una pista cerrada.
 
@@ -61,7 +67,7 @@ y no avanza en una pista cerrada.
 - `deslizar(el, fn, ignorar)` en `cinta.js` maneja el deslizar con el dedo (incluso con la `.app` girada); lo usan la cinta y el carrusel.
 - Ojo con los nombres de clase: son globales en el CSS. Un estado como `.pregunta` chocó con otro elemento; usar nombres específicos.
 - `js/final.js`: invitación, confeti al llegar, volver a empezar.
-- `images/`: `tv.png`, `tv-control.png`, `casete-abierto.png` (portada), grabadora `rec.png`, foto `tel.png`, juegos (`canicas`, `coca`, `rejo-quemado`, `trompo`, `yermis`), `msn.png`, `1100.png`, `cyber.png`, `cyber-contador.png`, `cyberwin.jpg`, `cinta.png` y `pastel.png`.
+- `images/`: `tv.png`, `tv-control.png`, `casete-abierto.png` (portada), grabadora `rec.png`, foto `tel.png`, juegos (`canicas`, `coca`, `rejo-quemado`, `trompo`, `yermis`), `msn.png`, `1100.png`, `cyber.png`, `cyber-contador.png`, `cyberwin.jpg`, `cinta.png`, `pastel.png` y `hbd.jpeg` (fondo de la última pantalla).
   `videos/`: `rugrats`, `oki-doki`, `supercampeones`, `chavo`, `caballeros`, `dragon-ball-z` (.mp4, H.264 + AAC, 640x360).
   `sounds/`: `jingle-la-mega.mp3` y `mis-ojos.mp3` (Pista 1), `modem.mp3` (Pista 4), `ringtone.mp3` (Pista 5).
   Nombres de archivo: minúsculas, sin espacios, tildes ni símbolos, y nunca empezando por `_` (GitHub Pages los ignora).
@@ -75,6 +81,10 @@ y no avanza en una pista cerrada.
   usar `var(--aw)`/`var(--ah)` (ancho y alto de la app) y las clases de `<html>` `.port`, `.short` (alto ≤ 500) y `.narrow` (ancho ≤ 600).
   Los márgenes seguros se usan con `var(--st|--sr|--sb|--sl)`, no con `env()` directo.
 - El público va de 10 a 70 años: botones grandes, textos cortos y nada que dependa de saber usar el celular.
+- Todo lo que hay que tocar parpadea en **neón verde** (`--neon`, `--neon-glow`, `--neon-suave` en `:root`; animación `glow`).
+  Los globitos de ayuda ("Oprime…", "¡Toca aquí!") son verdes con marco neón. Cada pista que pide una acción lleva un
+  `<p class="llamado">` (letra de pantalla, marco neón que late) que dice qué tocar para seguir; `.llamado.hecho` lo apaga.
+- Para probar el doble volumen de la canción hay que servir la página por http (p. ej. Live Server), no con doble clic.
 - Respetar `prefers-reduced-motion` (ya hay una regla global al final del CSS).
 - Las imágenes, videos y audios de `images/`, `videos/` y `sounds/` los aportó Harrison. No agregar otros materiales de terceros (logos, clips, letras de canciones) por cuenta propia.
 - Cada pista sigue el patrón `<article class="track">` con `<h3><span class="n">Pista N</span> Título</h3>`.

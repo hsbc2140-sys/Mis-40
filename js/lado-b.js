@@ -26,7 +26,8 @@ $('#dialBtn').addEventListener('click', async ()=>{
   await sleep(900);
   conectando=false; conectado=true; msnImg.classList.remove('off','marcando');
   tone(660,.1,'sine',.05); tone(990,.12,'sine',.05,.1);
-  $('#chatDesc').innerHTML='¡Ya estás conectado! Escríbele a tu amigo en la ventana de conversación y oprime Send. <b>Para seguir a la siguiente pista, envíale un zumbido.</b>';
+  $('#chatDesc').textContent='¡Ya estás conectado! Escríbele a tu amigo en la ventana de conversación y oprime Send.';
+  $('#chatLlamado').innerHTML='👉 Para seguir a la siguiente pista, <b>envíale un zumbido</b>.';
   $('#buzzBtn').hidden=false;
 });
 function line(html, cls=''){ const d=document.createElement('div'); d.className=cls; d.innerHTML=html; log.appendChild(d); log.scrollTop=log.scrollHeight; return d; }
@@ -49,7 +50,7 @@ $('#buzzBtn').addEventListener('click', async ()=>{
   line('Has enviado un zumbido.','bz');
   document.body.classList.remove('buzzing'); void document.body.offsetWidth; document.body.classList.add('buzzing');
   for(let i=0;i<36;i++) tone(i%2?140:110,.04,'square',.06,i*.04);
-  if($('#chatNext').hidden){ $('#buzzBtn').classList.remove('glow'); $('#chatNext').hidden=false; abrir('p-chat'); }
+  if($('#chatNext').hidden){ $('#buzzBtn').classList.remove('glow'); $('#chatLlamado').hidden=true; $('#chatNext').hidden=false; abrir('p-chat'); }
   await sleep(2000); line('<b>~*El Parcero*~</b> dice: ya ya, ¡no me zumbe más!');
 });
 
@@ -95,7 +96,7 @@ $('#perdidaBtn').addEventListener('click', async ()=>{
   celTxt.innerHTML='Llamando...<br>Parcero'; tone(425,.4,'sine',.05); await sleep(900);
   celTxt.innerHTML='Llamada realizada<br>Saldo intacto'; tone(300,.15,'square',.05);
   // La perdida ya cumplió: su botón le da el puesto a "Siguiente pista".
-  if($('#celNext').hidden){ $('#perdidaBtn').hidden=true; $('#celNext').hidden=false; abrir('p-cel'); }
+  if($('#celNext').hidden){ $('#perdidaBtn').hidden=true; $('#celLlamado').hidden=true; $('#celNext').hidden=false; abrir('p-cel'); }
   perdiendo=false;
 });
 $('#celNext').addEventListener('click', ()=>step(1));
@@ -118,7 +119,7 @@ $('#sinUsar').addEventListener('click', ()=>{
   cbStart=Date.now(); ciberCtl.classList.add('activo'); $('#ciberPc').classList.add('activo');
   [400,800,1200,2100,1800].forEach((f,i)=>tone(f,.18,'square',.025,i*.18));
   cbInt=setInterval(()=>{ const s=Math.floor((Date.now()-cbStart)/1000); $('#cbCont').textContent=`${Math.floor(s/3600)}:${dos(Math.floor(s/60)%60)}:${dos(s%60)}`; },250);
-  $('#cbSay').textContent='¡PC 3 asignado! El tiempo ya está corriendo, a $1.500 la hora.';
+  $('#cbSay').textContent='¡PC 3 asignado! El tiempo ya está corriendo, a $1.500 la hora.'; $('#cbSay').classList.add('hecho');
   $('#ciberNext').hidden=false; abrir('p-ciber');
 });
 $('#ciberNext').addEventListener('click', ()=>step(1));

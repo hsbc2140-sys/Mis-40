@@ -7,6 +7,10 @@
   --paper:#f2e4c0;
   --orange:#e8742a;
   --crt:#a6f0b0;
+  /* Neón: el color de todo lo que parpadea para decir "toca aquí". */
+  --neon:#39ff14;
+  --neon-glow:0 0 0 2px var(--neon),0 0 8px 2px var(--neon),0 0 20px 6px rgba(57,255,20,.55),0 0 38px 12px rgba(57,255,20,.3);
+  --neon-suave:0 0 0 1px rgba(57,255,20,.7),0 0 6px 1px rgba(57,255,20,.45);
   --ink:#2b1e15;
   --text:#efe4d6;
   --muted:#b9a99a;
@@ -112,7 +116,7 @@ body.buzzing .tape{animation:shake .2s 7}
   padding:6px max(12px,var(--sr)) calc(6px + var(--sb)) max(12px,var(--sl))}
 /* En el TV la barra solo muestra el aviso de apagarlo. */
 .dk-msg{display:none;flex:1;margin:0;text-align:center;font-family:var(--screen);font-size:22px;line-height:1.1;color:var(--paper)}
-.dk-msg b{color:var(--orange);font-weight:400}
+.dk-msg b{color:var(--neon);font-weight:400;text-shadow:0 0 6px rgba(57,255,20,.8)}
 .deckbar.intro>:not(.dk-msg){display:none}
 .deckbar.intro .dk-msg{display:block;animation:soft 2.2s ease-in-out infinite}
 @keyframes soft{50%{opacity:.6}}
@@ -169,7 +173,7 @@ body.buzzing .tape{animation:shake .2s 7}
 .tv-tip{justify-self:center;max-width:100%;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:4px 14px;text-align:center;font-family:var(--screen);font-size:24px;line-height:1.1;color:var(--crt);
   background:#120d11;border:1px solid #3a2e36;border-radius:999px;padding:6px 18px;animation:tip 2.2s ease-in-out infinite}
 .tv-tip b{color:var(--orange);font-weight:400}
-@keyframes tip{50%{box-shadow:0 0 0 3px rgba(166,240,176,.25)}}
+@keyframes tip{0%,100%{border-color:#3a2e36;box-shadow:none}50%{border-color:var(--neon);box-shadow:0 0 8px rgba(57,255,20,.6),0 0 18px rgba(57,255,20,.3)}}
 .short .tv-tip{font-size:20px;padding:4px 14px}
 .guia{display:flex;gap:4px}
 .guia i{font-style:normal;font-size:.82em;min-width:1.9em;padding:1px 3px;border-radius:4px;border:1px solid #4b3c46;color:#7a6a75;text-align:center;transition:background .3s,color .3s}
@@ -211,17 +215,20 @@ body.buzzing .tape{animation:shake .2s 7}
 .r-hi{left:35.4%;top:47.1%;width:17.9%;height:9.5%}
 /* Guías: primero brillan LO y HI; después de cambiar de canal, brilla OFF-ON. */
 .remote.teach-ch .r-lo,.remote.teach-ch .r-hi,.remote.teach-pwr .r-pwr{animation:glow 1.6s ease-in-out infinite}
-/* Ya vio todos los canales: OFF-ON late fuerte y dice "¡Apágame!". */
+/* Ya vio todos los canales: OFF-ON late fuerte en neón y dice "Apágame para ir a la fiesta". */
 .remote.teach-pwr .r-pwr{animation:pwrFoco 1s ease-in-out infinite}
-@keyframes pwrFoco{50%{transform:scale(1.15);box-shadow:0 0 0 5px var(--orange),0 0 26px 10px rgba(232,116,42,.75)}}
-.remote.teach-pwr .r-pwr::after{content:"¡Apágame!";position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);white-space:nowrap;
-  font-family:var(--screen);font-size:18px;line-height:1;color:#1b0f06;background:var(--orange);border-radius:6px;padding:3px 7px;pointer-events:none}
-@keyframes glow{50%{box-shadow:0 0 0 3px rgba(232,116,42,.9),0 0 16px 5px rgba(232,116,42,.55)}}
-/* Empujón: HI late más fuerte y muestra "¡Oprime!" encima. */
+@keyframes pwrFoco{0%,100%{box-shadow:var(--neon-suave)}50%{transform:scale(1.15);box-shadow:var(--neon-glow)}}
+.remote.teach-pwr .r-pwr::after{content:"Apágame para\A ir a la fiesta";bottom:calc(100% + 8px)}
+/* Parpadeo neón de todo lo que hay que tocar. Nunca se apaga del todo: queda un borde tenue entre latido y latido. */
+@keyframes glow{0%,100%{box-shadow:var(--neon-suave)}50%{box-shadow:var(--neon-glow)}}
+/* Empujón: HI late más fuerte y muestra "Oprime para cambiar canal" encima. */
 .remote.nudge .r-hi{animation:nudge .7s ease-in-out infinite}
-@keyframes nudge{50%{transform:scale(1.18);box-shadow:0 0 0 4px var(--orange),0 0 22px 8px rgba(232,116,42,.7)}}
-.remote.nudge .r-hi::after{content:"¡Oprime!";position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);white-space:nowrap;
-  font-family:var(--screen);font-size:18px;line-height:1;color:#1b0f06;background:var(--orange);border-radius:6px;padding:3px 7px;pointer-events:none}
+@keyframes nudge{0%,100%{box-shadow:var(--neon-suave)}50%{transform:scale(1.18);box-shadow:var(--neon-glow)}}
+.remote.nudge .r-hi::after{content:"Oprime para\A cambiar canal";bottom:calc(100% + 8px)}
+/* Globito neón (verde con marco brillante) de los botones del control. */
+.remote.nudge .r-hi::after,.remote.teach-pwr .r-pwr::after{position:absolute;left:50%;transform:translateX(-50%);white-space:pre;text-align:center;pointer-events:none;
+  font-family:var(--screen);font-size:18px;line-height:1;color:#eaffe0;background:#071a07;border:2px solid var(--neon);border-radius:6px;padding:4px 8px;
+  text-shadow:0 0 6px var(--neon);box-shadow:0 0 6px var(--neon),0 0 16px rgba(57,255,20,.6),inset 0 0 8px rgba(57,255,20,.45)}
 /* "A continuación": cintillo que entra por la izquierda con el próximo canal sin ver. */
 .next-up{position:absolute;left:5%;right:5%;bottom:9%;z-index:3;margin:0;font-family:var(--screen);font-size:calc(var(--h) * .048);line-height:1.1;color:#fff;
   background:linear-gradient(90deg,rgba(232,116,42,.95),rgba(180,70,20,.85));border-radius:4px;padding:.2em .5em;transform:translateX(-115%);transition:transform .45s ease;pointer-events:none}
@@ -234,7 +241,9 @@ body.buzzing .tape{animation:shake .2s 7}
 .tv-aviso small{display:block;margin-top:.45em;font-size:.68em;color:#ffe14d}
 .tv-aviso.show{display:grid;animation:avisoIn .3s ease}
 .tv-aviso.alto{background:rgba(150,16,8,.9)}
-.tv-aviso.listo{background:rgba(10,100,40,.9)}
+/* Al completar los canales el aviso no tapa el video: es una franja abajo, con borde neón, y se queda hasta apagar. */
+.tv-aviso.listo{inset:auto 0 0 0;padding:3% 4%;font-size:calc(var(--h) * .05);background:rgba(6,60,20,.9);border-top:2px solid var(--neon);box-shadow:0 -4px 16px rgba(57,255,20,.45);text-shadow:0 0 6px rgba(57,255,20,.8)}
+.tv-aviso.listo small{display:inline;margin:0 0 0 .4em;font-size:.8em}
 @keyframes avisoIn{from{transform:scaleY(.04);filter:brightness(2.5)}}
 /* Sin sonido: aviso grande sobre la pantalla. */
 .mute-tip{display:none;position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:3;margin:0;white-space:nowrap;
@@ -251,8 +260,10 @@ body.buzzing .tape{animation:shake .2s 7}
 /* ---------- RADIOCASETE ---------- */
 /* Pantalla de información: texto a la izquierda y la cuenta 5..1 a la derecha. */
 .lcd{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:10px;background:#9db78e;color:#16240f;font-family:var(--screen);font-size:20px;border-radius:6px;padding:6px 12px;min-height:60px;line-height:1.15;box-shadow:inset 0 0 0 3px #6f8a61}
-.lcd-count{font-size:46px;font-weight:400;line-height:1;text-align:right;font-variant-numeric:tabular-nums}
-.lcd-count.ya{color:#a30d00;animation:blinkTip .5s steps(2,start) infinite}
+/* La cuenta es también un botón invisible: tocar el "¡YA!" hace lo mismo que la tecla REC. */
+.lcd-count{font-size:46px;font-weight:400;line-height:1;text-align:right;font-variant-numeric:tabular-nums;
+  border:0;background:transparent;padding:0;color:inherit;cursor:pointer;min-width:1.2em;min-height:1em}
+.lcd-count.ya{color:#a30d00;text-shadow:0 0 6px rgba(255,40,40,.8),0 0 14px rgba(255,40,40,.5);animation:blinkTip .5s steps(2,start) infinite}
 .btn.glow{animation:glow 1.6s ease-in-out infinite}
 /* La grabadora (rec.png, 510x423). Teclas: PLAY = primera (x 50-88), REC = roja (x 192-228), y 104-134. */
 .radio{position:relative;justify-self:center;aspect-ratio:510/423;width:min(100%,calc((var(--ah) - var(--deck) - 40px) * 1.2057))}
@@ -267,10 +278,10 @@ body.buzzing .tape{animation:shake .2s 7}
 @media (hover:hover){ .r-rec:hover,.r-rec:hover ~ .r-play{background:rgba(255,255,255,.28);box-shadow:0 0 0 3px var(--orange),0 0 16px 5px rgba(232,116,42,.6)} }
 /* Mientras suena el jingle, REC y PLAY "se oprimen" solos para mostrar qué hay que hacer. */
 .radio.demo .rkey{animation:keyDemo 1.4s ease-in-out infinite}
-@keyframes keyDemo{40%,60%{background:rgba(255,255,255,.28);box-shadow:0 0 0 3px var(--orange),0 0 16px 5px rgba(232,116,42,.6);transform:translateY(2px)}}
+@keyframes keyDemo{40%,60%{background:rgba(57,255,20,.18);box-shadow:var(--neon-glow);transform:translateY(2px)}}
 /* ¡Ya! REC parpadea en rojo. */
 .radio.now .r-rec{animation:recNow .5s steps(2,start) infinite}
-@keyframes recNow{50%{box-shadow:0 0 0 4px #ff3b30,0 0 22px 8px rgba(255,59,48,.7)}}
+@keyframes recNow{50%{box-shadow:0 0 0 2px #ff3b3b,0 0 10px 3px #ff3b3b,0 0 26px 8px rgba(255,40,40,.65),0 0 44px 14px rgba(255,40,40,.35)}}
 
 /* ---------- LOS TELÉFONOS NARANJAS ---------- */
 .track-tel{grid-template-columns:minmax(0,6fr) minmax(0,5fr)}
@@ -310,10 +321,19 @@ body.buzzing .tape{animation:shake .2s 7}
 .car-next{right:8px;animation:glow 1.6s ease-in-out infinite}
 /* Mientras falten juegos por ver: la flecha ▶ crece, palpita en naranja y dice "¡Toca aquí!". */
 .carrusel.guiar .car-next{width:56px;height:56px;font-size:22px;background:var(--orange);animation:flechaFoco 1.1s ease-in-out infinite}
-@keyframes flechaFoco{50%{transform:translateY(-50%) scale(1.15);box-shadow:0 0 0 6px rgba(232,116,42,.45),0 0 26px 10px rgba(232,116,42,.6)}}
-.carrusel.guiar .car-next::before{content:"¡Toca aquí!";position:absolute;right:calc(100% + 10px);top:50%;transform:translateY(-50%);white-space:nowrap;pointer-events:none;
-  font-family:var(--screen);font-size:20px;line-height:1;color:#1b0f06;background:#fff;border:2px solid #1b0f06;border-radius:6px;padding:4px 8px;box-shadow:3px 3px 0 #1b0f06}
-.juegos-aviso{font-family:var(--screen);font-size:22px;line-height:1.15;color:var(--crt);animation:soft 2.2s ease-in-out infinite}
+@keyframes flechaFoco{0%,100%{transform:translateY(-50%);box-shadow:var(--neon-suave)}50%{transform:translateY(-50%) scale(1.15);box-shadow:var(--neon-glow)}}
+.carrusel.guiar .car-next::before{content:"¡Toca aquí!";position:absolute;right:calc(100% + 10px);top:50%;transform:translateY(-50%)}
+/* Globito neón "¡Toca aquí!" (carrusel y «Sin usar» del ciber). */
+.carrusel.guiar .car-next::before,.sinusar::after{white-space:nowrap;pointer-events:none;font-family:var(--screen);font-size:20px;line-height:1;
+  color:#eaffe0;background:#071a07;border:2px solid var(--neon);border-radius:6px;padding:4px 8px;text-shadow:0 0 6px var(--neon);
+  box-shadow:0 0 6px var(--neon),0 0 16px rgba(57,255,20,.6),inset 0 0 8px rgba(57,255,20,.45)}
+/* Llamado: instrucción clara de qué hacer para seguir. Letra de pantalla, verde neón, marco que late. */
+.llamado{justify-self:start;margin:0;font-family:var(--screen);font-size:23px;line-height:1.15;color:#eaffe0;text-shadow:0 0 6px rgba(57,255,20,.9);
+  background:rgba(57,255,20,.07);border:2px solid var(--neon);border-radius:8px;padding:6px 12px;animation:llamado 1.6s ease-in-out infinite}
+.llamado b{font-weight:400;color:var(--neon)}
+@keyframes llamado{0%,100%{box-shadow:0 0 4px rgba(57,255,20,.5)}50%{box-shadow:0 0 10px 2px var(--neon),0 0 24px 6px rgba(57,255,20,.45)}}
+.llamado.hecho{animation:none;border-color:var(--crt);color:var(--crt);text-shadow:none;background:transparent}
+.short .llamado{font-size:20px;padding:4px 10px}
 .car-dots{display:flex;justify-content:center;gap:8px}
 .car-dots i{width:10px;height:10px;border-radius:50%;background:#4b3c46;transition:background .3s,transform .3s}
 .car-dots i.visto{background:var(--crt)}
@@ -366,6 +386,8 @@ body.buzzing .tape{animation:shake .2s 7}
 #celTxt{flex:1;overflow:hidden;overflow-wrap:anywhere}
 .smsbox{display:grid;gap:8px}
 .smsbox label{font-size:14px;color:var(--muted)}
+/* En pantallas bajitas el rótulo "Mensaje de texto" se oculta a la vista (los lectores de pantalla lo siguen leyendo) para que quepa el llamado. */
+.short .smsbox label{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
 .short .smsbox{gap:6px}
 .short .smsbox textarea{min-height:58px;font-size:18px}
 .smsbox textarea{width:100%;min-height:90px;resize:vertical;background:#1a1418;color:var(--text);border:1px solid #5a4652;border-radius:8px;padding:8px;font-family:var(--screen);font-size:20px}
@@ -393,8 +415,7 @@ body.buzzing .tape{animation:shake .2s 7}
 .c-cont{left:12.1%;width:11.1%;font-variant-numeric:tabular-nums}
 /* «Sin usar» (x 149-209, y 73-88): brilla y dice "¡Toca aquí!" hasta que se toca. */
 .sinusar{position:absolute;left:26.2%;top:52.6%;width:10.7%;height:11.2%;border:0;padding:0;background:transparent;border-radius:2px;cursor:pointer;animation:glow 1.3s ease-in-out infinite}
-.sinusar::after{content:"¡Toca aquí!";position:absolute;left:50%;top:calc(100% + 6px);transform:translateX(-50%);white-space:nowrap;pointer-events:none;
-  font-family:var(--screen);font-size:18px;line-height:1;color:#1b0f06;background:var(--orange);border:2px solid #1b0f06;border-radius:6px;padding:3px 7px}
+.sinusar::after{content:"¡Toca aquí!";position:absolute;left:50%;top:calc(100% + 6px);transform:translateX(-50%);font-size:18px}
 .ciberctl.activo .sinusar{display:none}
 .ciberctl:not(.activo){overflow:visible}
 
@@ -417,25 +438,51 @@ body.buzzing .tape{animation:shake .2s 7}
 .upl input{position:absolute;opacity:0;width:1px;height:1px}
 
 /* ---------- PISTA OCULTA: PASTEL + INVITACIÓN ---------- */
-.page.finale{background:radial-gradient(circle at 30% 10%,#3d2a1e,var(--bg) 70%)}
-.finale-in{width:min(100%,980px);margin:auto;display:grid;grid-template-columns:minmax(0,4fr) minmax(0,7fr);gap:16px 32px;align-items:center}
+/* Fondo hbd.jpeg (1344x849) con un velo oscuro encima para que el texto se lea sobre las luces. */
+.page.finale{background:linear-gradient(rgba(12,6,16,.5),rgba(12,6,16,.5)),url("../images/hbd.jpeg") center/cover no-repeat,var(--bg)}
+/* Tres columnas: pastel (izquierda), invitación (centro) y ruleta del regalo (derecha). */
+.finale-in{width:min(100%,1180px);margin:auto;display:grid;grid-template-columns:minmax(0,3fr) minmax(0,6fr) minmax(0,3.4fr);gap:14px 22px;align-items:center}
 .fin-cake{display:grid;justify-items:center}
 /* pastel.png (1177x1337): alto de la página, el ancho sale solo */
 .pastel{display:block;height:min(calc(var(--ah) - var(--deck) - 40px),440px);width:auto;max-width:100%;object-fit:contain;filter:drop-shadow(0 14px 22px rgba(0,0,0,.55))}
-.fin-inv{display:grid;gap:10px;justify-items:start}
-.fin-inv .lado{font-family:var(--screen);font-size:22px;color:var(--orange)}
-.fin-inv h2{font-family:var(--display);font-size:clamp(26px,calc(var(--aw) * .042),42px);line-height:1.1;color:var(--paper);font-weight:400}
+/* Los datos van en un panel oscuro translúcido sobre el fondo. */
+.fin-inv{display:grid;gap:10px;justify-items:start;background:rgba(14,8,18,.74);border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:16px 20px;
+  -webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px);box-shadow:0 14px 30px rgba(0,0,0,.45)}
+.fin-inv h2{font-family:var(--display);font-size:clamp(22px,calc(var(--aw) * .03),38px);line-height:1.1;color:var(--paper);font-weight:400}
 .inv-sub{font-family:var(--display);font-size:clamp(17px,calc(var(--aw) * .024),24px);line-height:1.2;color:var(--orange)}
 .inv{display:grid;grid-template-columns:auto 1fr;gap:4px 14px;margin:0}
 .inv dt{font-family:var(--screen);font-size:21px;line-height:1.2;color:var(--orange)}
 .inv dd{margin:0;font-weight:500}
 .inv-conf{font-weight:700;color:var(--crt)}
+/* ---------- RULETA DEL REGALO ---------- */
+.fin-ruleta{display:grid;justify-items:center;gap:8px;text-align:center}
+.ruleta-titulo{font-family:var(--display);font-weight:400;font-size:clamp(18px,calc(var(--aw) * .022),28px);line-height:1.1;color:var(--paper);text-shadow:0 2px 8px rgba(0,0,0,.7)}
+/* Tamaño del disco: lo que dé el ancho de la columna, sin pasarse del alto disponible. */
+.ruleta{position:relative;width:min(100%,calc(var(--ah) - var(--deck) - 150px),300px);aspect-ratio:1}
+/* 8 casillas de 45°, centradas en 0°, 45°, 90°… (por eso el degradado empieza en -22.5°): cada giro de 45° deja una casilla bajo la flecha. */
+.ruleta-disco{position:absolute;inset:0;border-radius:50%;cursor:pointer;
+  background:conic-gradient(from -22.5deg,#e8742a 0 45deg,#f4c900 0 90deg,#ff4fd8 0 135deg,#18c5e8 0 180deg,#8a3ffc 0 225deg,#39d353 0 270deg,#ff3b3b 0 315deg,#2f6bff 0 360deg);
+  border:5px solid #fff;box-shadow:0 0 0 3px #1b0f06,0 0 14px 3px rgba(57,255,20,.6),0 10px 24px rgba(0,0,0,.55);
+  transition:transform 5.5s cubic-bezier(.12,.6,.1,1)}
+.ruleta-disco span{position:absolute;inset:0;display:flex;justify-content:center;padding-top:8%;transform:rotate(calc(var(--i) * 45deg));pointer-events:none;
+  font-family:var(--display);font-size:clamp(16px,calc((var(--ah) - var(--deck) - 150px) * .12),32px);line-height:1;color:#fff;text-shadow:0 0 2px #000,0 2px 4px rgba(0,0,0,.8)}
+/* Flecha arriba, apuntando hacia el centro. */
+.ruleta-flecha{position:absolute;left:50%;top:-6px;transform:translateX(-50%);width:0;height:0;z-index:2;
+  border-left:13px solid transparent;border-right:13px solid transparent;border-top:24px solid #fff;filter:drop-shadow(0 0 3px #000) drop-shadow(0 0 6px rgba(57,255,20,.8))}
+.ruleta-centro{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:28%;aspect-ratio:1;border-radius:50%;z-index:2;
+  border:3px solid #1b0f06;background:radial-gradient(circle at 40% 35%,#fff,#e9e2cf);color:#1b0f06;font-family:var(--screen);font-size:clamp(13px,calc((var(--ah) - var(--deck) - 150px) * .08),20px);line-height:1;padding:0;animation:glow 1.6s ease-in-out infinite}
+/* El premio: cuadro alegre que aparece con un salto al parar la ruleta. Su espacio está reservado para que nada se mueva. */
+.premio{margin:0;min-height:2.4em;display:grid;place-items:center;visibility:hidden;white-space:nowrap;font-family:var(--display);font-size:clamp(16px,calc(var(--aw) * .021),26px);line-height:1.1;
+  color:#1b0f06;background:linear-gradient(135deg,#ffe14d,#ff9a3c 50%,#ff4fd8);border:3px solid #fff;border-radius:12px;padding:.25em .6em;
+  box-shadow:0 0 0 3px #1b0f06,0 0 18px 4px rgba(255,79,216,.6);transform:rotate(-3deg)}
+.premio.show{visibility:visible;animation:premio .6s cubic-bezier(.2,1.6,.4,1)}
+@keyframes premio{from{transform:rotate(-14deg) scale(.2);opacity:0}}
+.short .ruleta-titulo{font-size:18px}
 .port .finale-in{grid-template-columns:minmax(0,1fr)}
 .port .fin-inv{justify-items:center;text-align:center}
 .port .pastel{height:min(calc(var(--ah) * .46),320px)}
-.short .fin-inv{gap:6px}
-.short .fin-inv .lado{font-size:19px}
-.short .fin-inv h2{font-size:clamp(22px,calc(var(--aw) * .034),32px)}
+.short .fin-inv{gap:6px;padding:12px 16px}
+.short .fin-inv h2{font-size:clamp(20px,calc(var(--aw) * .028),30px)}
 .short .inv-sub{font-size:17px}
 .short .inv dt{font-size:18px}
 .short .inv dd,.short .inv-conf{font-size:14px}

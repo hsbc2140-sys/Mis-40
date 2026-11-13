@@ -15,9 +15,10 @@ function guia(){
   $('#tvGuia').innerHTML=CANALES.map((c,i)=>`<i class="${vistos.has(i)?'visto':''}${i===ch?' ahora':''}">${String(c.n).padStart(2,'0')}</i>`).join('');
 }
 // Aviso grande en la pantalla del TV (tipo boletín). cls: 'alto' (rojo) o 'listo' (verde).
+// ms = cuánto dura; sin ms se queda puesto.
 function aviso(html, cls, ms){
   const a=$('#tvAviso'); a.innerHTML=html; a.className='tv-aviso show '+cls;
-  clearTimeout(aviso.t); aviso.t=setTimeout(()=>{ a.className='tv-aviso'; },ms);
+  clearTimeout(aviso.t); if(ms) aviso.t=setTimeout(()=>{ a.className='tv-aviso'; },ms);
 }
 // Empujón: si se queda 7 s en un canal sin haber visto todos, sale "A continuación" con el próximo canal sin ver
 // y el botón HI dice "¡Oprime!".
@@ -38,7 +39,8 @@ function completar(){
   clearTimeout(nudgeT); $('#nextUp').classList.remove('show');
   remote.className='remote teach-pwr'; hint.innerHTML=TIP_APAGAR;
   $('#dkMsg').innerHTML='¡Listo! <b>Apaga el TV</b> con el botón OFF-ON y que empiece la fiesta ▸';
-  aviso('¡VISTE TODOS LOS CANALES!<small>Ya puedes apagar el TV</small>','listo',3000);
+  // Franja abajo de la pantalla (no tapa el video) que se queda hasta apagar.
+  aviso('¡VISTE TODOS LOS CANALES!<small>Ya puedes apagar el TV</small>','listo');
   [523,659,784,1047].forEach((f,i)=>tone(f,.18,'triangle',.05,i*.12));
 }
 function snowLoop(){

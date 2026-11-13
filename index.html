@@ -80,7 +80,7 @@
       <div class="track-head">
         <h3><span class="n">Pista 1</span> Grabar de la radio</h3>
         <p class="desc">Prende el radio y oprime REC justo cuando la cuenta llegue a cero, antes de que el locutor vuelva a hablar encima.</p>
-        <div class="lcd" aria-live="polite"><span id="radioLcd">Casete virgen de 90 minutos listo.</span><b class="lcd-count" id="radioCount"></b></div>
+        <div class="lcd" aria-live="polite"><span id="radioLcd">Casete virgen de 90 minutos listo.</span><button class="lcd-count" id="radioCount" aria-label="REC: grabar"></button></div>
         <p class="say" id="radioSay" aria-live="polite"></p>
         <div class="btnrow">
           <button class="btn hot glow" id="radioOn">📻 Prender el radio</button>
@@ -133,7 +133,7 @@
         <h3><span class="n">Pista 3</span> Los juegos</h3>
         <p class="desc">Si usted jugó alguno de estos juegos, toca decirle la verdad: la cédula ya pesa más de lo normal.</p>
         <p class="desc">Pero tranquilo, también significa que tuvo una infancia brutal llena de amigos y trasnochadas.</p>
-        <p class="juegos-aviso" id="juegosAviso">👉 Mira todos los juegos del carrete para descubrir la siguiente pista.</p>
+        <p class="llamado" id="juegosAviso">👉 Mira todos los juegos del carrete para descubrir la siguiente pista.</p>
         <p class="pregunta" id="juegosPregunta" hidden>¿Cuál faltó en esta lista de juegos legendarios?</p>
         <div class="btnrow"><button class="btn hot" id="juegosNext" hidden>Siguiente pista ▸</button></div>
       </div>
@@ -154,6 +154,7 @@
       <div class="track-head">
         <h3><span class="n">Pista 4</span> Conectado en el chat</h3>
         <p class="desc" id="chatDesc">Antes de chatear había que conectarse a internet... y rogar que nadie levantara el teléfono de la casa.</p>
+        <p class="llamado" id="chatLlamado">👉 Toca <b>«Conectar a internet»</b> en la ventanita para entrar al chat.</p>
         <div class="btnrow">
           <button class="btn hot glow" id="buzzBtn" hidden>📳 Enviar zumbido</button>
           <button class="btn hot" id="chatNext" hidden>Siguiente pista ▸</button>
@@ -196,6 +197,7 @@
           <label for="smsTxt">Mensaje de texto</label>
           <textarea id="smsTxt">q mas! ya llgue a la casa. mñn nos vms en el ciber a las 3. bye</textarea>
           <span class="count" id="smsCount"></span>
+          <p class="llamado" id="celLlamado">👉 Toca <b>«Botar una perdida»</b> para seguir.</p>
           <div class="btnrow">
             <button class="btn" id="smsSend">Enviar SMS</button>
             <button class="btn hot glow" id="perdidaBtn">📞 Botar una perdida</button>
@@ -227,7 +229,7 @@
         </div>
       </div>
       <div class="track-body">
-        <p class="say" id="cbSay" aria-live="polite">Pide un computador: toca «Sin usar» en la línea 3 del control del ciber.</p>
+        <p class="llamado" id="cbSay" aria-live="polite">👉 Pide un computador: toca <b>«Sin usar»</b> en la línea 3 del control del ciber.</p>
         <!-- El control del dueño (cyber-contador.png, 568x139). Filas de 15,5 px: la 2 en y 57,5-73, la 3 en y 73-88,5.
              "Sin usar" (x 149-209) se vuelve una fila igual a las de arriba y abajo: la fila 2 copiada, con hora y contador propios. -->
         <div class="ciberctl" id="ciberCtl">
@@ -265,14 +267,13 @@
     </article>
   </section>
 
-  <!-- PISTA OCULTA: pastel + invitación -->
+  <!-- PISTA OCULTA: pastel (izquierda) + invitación (centro) + ruleta de regalo (derecha) -->
   <section class="page finale" id="p-final" data-side="cinta" data-label="PISTA OCULTA">
     <div class="finale-in">
       <div class="fin-cake">
         <img class="pastel" src="images/pastel.png" alt="Pastel de cumpleaños de dos pisos con el número 40, flores amarillas y detalles dorados">
       </div>
       <div class="fin-inv">
-        <span class="lado">Pista oculta · Invitación</span>
         <h2>Lo conseguiste... ¡Bienvenido a mi fiesta!!!</h2>
         <p class="inv-sub">Rifas, juegos y espectáculos.</p>
         <dl class="inv" id="inv"></dl>
@@ -280,6 +281,19 @@
         <div class="btnrow">
           <a class="btn hot" id="rsvp" target="_blank" rel="noopener" hidden>✅ Confirmar por WhatsApp</a>
         </div>
+      </div>
+      <!-- Ruleta de 8 casillas sorpresa: gira sola al llegar (y otra vez al tocarla). Al parar sale el premio con confeti. -->
+      <div class="fin-ruleta">
+        <h3 class="ruleta-titulo">🎁 Regalo sorpresa</h3>
+        <div class="ruleta" id="ruleta">
+          <div class="ruleta-disco" id="ruletaDisco" aria-hidden="true">
+            <span style="--i:0">?</span><span style="--i:1">?</span><span style="--i:2">?</span><span style="--i:3">?</span>
+            <span style="--i:4">?</span><span style="--i:5">?</span><span style="--i:6">?</span><span style="--i:7">?</span>
+          </div>
+          <span class="ruleta-flecha" aria-hidden="true"></span>
+          <button class="ruleta-centro" id="ruletaBtn" aria-label="Girar la ruleta del regalo sorpresa">GIRAR</button>
+        </div>
+        <p class="premio" id="premio" role="status"></p>
       </div>
     </div>
   </section>

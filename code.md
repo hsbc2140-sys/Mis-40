@@ -57,7 +57,8 @@ Mis 40/
 │   ├── 1100.png                          Pista 5: Nokia 1100
 │   ├── cyber.png, cyber-contador.png, cyberwin.jpg          Pista 6: ciber
 │   ├── cinta.png                         Pista 7: rollo de negativos
-│   └── pastel.png                        Pista oculta: pastel
+│   ├── pastel.png                        Pista oculta: pastel
+│   └── hbd.jpeg                          Pista oculta: fondo
 ├── videos/               Intros del TV (H.264 + AAC): rugrats, oki-doki, supercampeones, chavo,
 │                         caballeros, dragon-ball-z (.mp4)
 ├── sounds/               jingle-la-mega, mis-ojos (Pista 1), modem (Pista 4), ringtone (Pista 5) (.mp3)
@@ -106,22 +107,22 @@ las coordenadas en píxeles de la imagen. Si se cambia una imagen, hay que volve
 
 | Archivo | Líneas | Contenido |
 |---|---|---|
-| [`index.html`](#5-indexhtml) | 314 | Marcado de todas las páginas |
-| [`css/styles.css`](#6-cssstylescss) | 446 | Estilos |
+| [`index.html`](#5-indexhtml) | 328 | Marcado de todas las páginas |
+| [`css/styles.css`](#6-cssstylescss) | 493 | Estilos |
 | [`js/utils.js`](#7-jsutilsjs) | 48 | Utilidades y sonido |
 | [`js/horizontal.js`](#8-jshorizontaljs) | 49 | Vista horizontal forzada |
 | [`js/contenido.js`](#9-jscontenidojs) | 61 | Textos y datos editables |
 | [`js/cinta.js`](#10-jscintajs) | 143 | Navegación, barra, transición y portada |
-| [`js/tv.js`](#11-jstvjs) | 121 | Intro: televisor y control remoto |
-| [`js/lado-a.js`](#12-jslado-ajs) | 134 | Pistas 1 a 3 |
-| [`js/lado-b.js`](#13-jslado-bjs) | 142 | Pistas 4 a 7 |
-| [`js/final.js`](#14-jsfinaljs) | 27 | Pista oculta |
+| [`js/tv.js`](#11-jstvjs) | 123 | Intro: televisor y control remoto |
+| [`js/lado-a.js`](#12-jslado-ajs) | 149 | Pistas 1 a 3 |
+| [`js/lado-b.js`](#13-jslado-bjs) | 143 | Pistas 4 a 7 |
+| [`js/final.js`](#14-jsfinaljs) | 73 | Pista oculta |
 
 ---
 
 ## 5. `index.html`
 
-Marcado de todas las páginas. 314 líneas.
+Marcado de todas las páginas. 328 líneas.
 
 ````html
 <!DOCTYPE html>
@@ -206,7 +207,7 @@ Marcado de todas las páginas. 314 líneas.
       <div class="track-head">
         <h3><span class="n">Pista 1</span> Grabar de la radio</h3>
         <p class="desc">Prende el radio y oprime REC justo cuando la cuenta llegue a cero, antes de que el locutor vuelva a hablar encima.</p>
-        <div class="lcd" aria-live="polite"><span id="radioLcd">Casete virgen de 90 minutos listo.</span><b class="lcd-count" id="radioCount"></b></div>
+        <div class="lcd" aria-live="polite"><span id="radioLcd">Casete virgen de 90 minutos listo.</span><button class="lcd-count" id="radioCount" aria-label="REC: grabar"></button></div>
         <p class="say" id="radioSay" aria-live="polite"></p>
         <div class="btnrow">
           <button class="btn hot glow" id="radioOn">📻 Prender el radio</button>
@@ -259,7 +260,7 @@ Marcado de todas las páginas. 314 líneas.
         <h3><span class="n">Pista 3</span> Los juegos</h3>
         <p class="desc">Si usted jugó alguno de estos juegos, toca decirle la verdad: la cédula ya pesa más de lo normal.</p>
         <p class="desc">Pero tranquilo, también significa que tuvo una infancia brutal llena de amigos y trasnochadas.</p>
-        <p class="juegos-aviso" id="juegosAviso">👉 Mira todos los juegos del carrete para descubrir la siguiente pista.</p>
+        <p class="llamado" id="juegosAviso">👉 Mira todos los juegos del carrete para descubrir la siguiente pista.</p>
         <p class="pregunta" id="juegosPregunta" hidden>¿Cuál faltó en esta lista de juegos legendarios?</p>
         <div class="btnrow"><button class="btn hot" id="juegosNext" hidden>Siguiente pista ▸</button></div>
       </div>
@@ -280,6 +281,7 @@ Marcado de todas las páginas. 314 líneas.
       <div class="track-head">
         <h3><span class="n">Pista 4</span> Conectado en el chat</h3>
         <p class="desc" id="chatDesc">Antes de chatear había que conectarse a internet... y rogar que nadie levantara el teléfono de la casa.</p>
+        <p class="llamado" id="chatLlamado">👉 Toca <b>«Conectar a internet»</b> en la ventanita para entrar al chat.</p>
         <div class="btnrow">
           <button class="btn hot glow" id="buzzBtn" hidden>📳 Enviar zumbido</button>
           <button class="btn hot" id="chatNext" hidden>Siguiente pista ▸</button>
@@ -322,6 +324,7 @@ Marcado de todas las páginas. 314 líneas.
           <label for="smsTxt">Mensaje de texto</label>
           <textarea id="smsTxt">q mas! ya llgue a la casa. mñn nos vms en el ciber a las 3. bye</textarea>
           <span class="count" id="smsCount"></span>
+          <p class="llamado" id="celLlamado">👉 Toca <b>«Botar una perdida»</b> para seguir.</p>
           <div class="btnrow">
             <button class="btn" id="smsSend">Enviar SMS</button>
             <button class="btn hot glow" id="perdidaBtn">📞 Botar una perdida</button>
@@ -353,7 +356,7 @@ Marcado de todas las páginas. 314 líneas.
         </div>
       </div>
       <div class="track-body">
-        <p class="say" id="cbSay" aria-live="polite">Pide un computador: toca «Sin usar» en la línea 3 del control del ciber.</p>
+        <p class="llamado" id="cbSay" aria-live="polite">👉 Pide un computador: toca <b>«Sin usar»</b> en la línea 3 del control del ciber.</p>
         <!-- El control del dueño (cyber-contador.png, 568x139). Filas de 15,5 px: la 2 en y 57,5-73, la 3 en y 73-88,5.
              "Sin usar" (x 149-209) se vuelve una fila igual a las de arriba y abajo: la fila 2 copiada, con hora y contador propios. -->
         <div class="ciberctl" id="ciberCtl">
@@ -391,14 +394,13 @@ Marcado de todas las páginas. 314 líneas.
     </article>
   </section>
 
-  <!-- PISTA OCULTA: pastel + invitación -->
+  <!-- PISTA OCULTA: pastel (izquierda) + invitación (centro) + ruleta de regalo (derecha) -->
   <section class="page finale" id="p-final" data-side="cinta" data-label="PISTA OCULTA">
     <div class="finale-in">
       <div class="fin-cake">
         <img class="pastel" src="images/pastel.png" alt="Pastel de cumpleaños de dos pisos con el número 40, flores amarillas y detalles dorados">
       </div>
       <div class="fin-inv">
-        <span class="lado">Pista oculta · Invitación</span>
         <h2>Lo conseguiste... ¡Bienvenido a mi fiesta!!!</h2>
         <p class="inv-sub">Rifas, juegos y espectáculos.</p>
         <dl class="inv" id="inv"></dl>
@@ -406,6 +408,19 @@ Marcado de todas las páginas. 314 líneas.
         <div class="btnrow">
           <a class="btn hot" id="rsvp" target="_blank" rel="noopener" hidden>✅ Confirmar por WhatsApp</a>
         </div>
+      </div>
+      <!-- Ruleta de 8 casillas sorpresa: gira sola al llegar (y otra vez al tocarla). Al parar sale el premio con confeti. -->
+      <div class="fin-ruleta">
+        <h3 class="ruleta-titulo">🎁 Regalo sorpresa</h3>
+        <div class="ruleta" id="ruleta">
+          <div class="ruleta-disco" id="ruletaDisco" aria-hidden="true">
+            <span style="--i:0">?</span><span style="--i:1">?</span><span style="--i:2">?</span><span style="--i:3">?</span>
+            <span style="--i:4">?</span><span style="--i:5">?</span><span style="--i:6">?</span><span style="--i:7">?</span>
+          </div>
+          <span class="ruleta-flecha" aria-hidden="true"></span>
+          <button class="ruleta-centro" id="ruletaBtn" aria-label="Girar la ruleta del regalo sorpresa">GIRAR</button>
+        </div>
+        <p class="premio" id="premio" role="status"></p>
       </div>
     </div>
   </section>
@@ -442,7 +457,7 @@ Marcado de todas las páginas. 314 líneas.
 
 ## 6. `css/styles.css`
 
-Estilos. 446 líneas.
+Estilos. 493 líneas.
 
 ````css
 /* Estilos de la tarjeta. Las variables de color y fuentes están en :root. */
@@ -454,6 +469,10 @@ Estilos. 446 líneas.
   --paper:#f2e4c0;
   --orange:#e8742a;
   --crt:#a6f0b0;
+  /* Neón: el color de todo lo que parpadea para decir "toca aquí". */
+  --neon:#39ff14;
+  --neon-glow:0 0 0 2px var(--neon),0 0 8px 2px var(--neon),0 0 20px 6px rgba(57,255,20,.55),0 0 38px 12px rgba(57,255,20,.3);
+  --neon-suave:0 0 0 1px rgba(57,255,20,.7),0 0 6px 1px rgba(57,255,20,.45);
   --ink:#2b1e15;
   --text:#efe4d6;
   --muted:#b9a99a;
@@ -559,7 +578,7 @@ body.buzzing .tape{animation:shake .2s 7}
   padding:6px max(12px,var(--sr)) calc(6px + var(--sb)) max(12px,var(--sl))}
 /* En el TV la barra solo muestra el aviso de apagarlo. */
 .dk-msg{display:none;flex:1;margin:0;text-align:center;font-family:var(--screen);font-size:22px;line-height:1.1;color:var(--paper)}
-.dk-msg b{color:var(--orange);font-weight:400}
+.dk-msg b{color:var(--neon);font-weight:400;text-shadow:0 0 6px rgba(57,255,20,.8)}
 .deckbar.intro>:not(.dk-msg){display:none}
 .deckbar.intro .dk-msg{display:block;animation:soft 2.2s ease-in-out infinite}
 @keyframes soft{50%{opacity:.6}}
@@ -616,7 +635,7 @@ body.buzzing .tape{animation:shake .2s 7}
 .tv-tip{justify-self:center;max-width:100%;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:4px 14px;text-align:center;font-family:var(--screen);font-size:24px;line-height:1.1;color:var(--crt);
   background:#120d11;border:1px solid #3a2e36;border-radius:999px;padding:6px 18px;animation:tip 2.2s ease-in-out infinite}
 .tv-tip b{color:var(--orange);font-weight:400}
-@keyframes tip{50%{box-shadow:0 0 0 3px rgba(166,240,176,.25)}}
+@keyframes tip{0%,100%{border-color:#3a2e36;box-shadow:none}50%{border-color:var(--neon);box-shadow:0 0 8px rgba(57,255,20,.6),0 0 18px rgba(57,255,20,.3)}}
 .short .tv-tip{font-size:20px;padding:4px 14px}
 .guia{display:flex;gap:4px}
 .guia i{font-style:normal;font-size:.82em;min-width:1.9em;padding:1px 3px;border-radius:4px;border:1px solid #4b3c46;color:#7a6a75;text-align:center;transition:background .3s,color .3s}
@@ -658,17 +677,20 @@ body.buzzing .tape{animation:shake .2s 7}
 .r-hi{left:35.4%;top:47.1%;width:17.9%;height:9.5%}
 /* Guías: primero brillan LO y HI; después de cambiar de canal, brilla OFF-ON. */
 .remote.teach-ch .r-lo,.remote.teach-ch .r-hi,.remote.teach-pwr .r-pwr{animation:glow 1.6s ease-in-out infinite}
-/* Ya vio todos los canales: OFF-ON late fuerte y dice "¡Apágame!". */
+/* Ya vio todos los canales: OFF-ON late fuerte en neón y dice "Apágame para ir a la fiesta". */
 .remote.teach-pwr .r-pwr{animation:pwrFoco 1s ease-in-out infinite}
-@keyframes pwrFoco{50%{transform:scale(1.15);box-shadow:0 0 0 5px var(--orange),0 0 26px 10px rgba(232,116,42,.75)}}
-.remote.teach-pwr .r-pwr::after{content:"¡Apágame!";position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);white-space:nowrap;
-  font-family:var(--screen);font-size:18px;line-height:1;color:#1b0f06;background:var(--orange);border-radius:6px;padding:3px 7px;pointer-events:none}
-@keyframes glow{50%{box-shadow:0 0 0 3px rgba(232,116,42,.9),0 0 16px 5px rgba(232,116,42,.55)}}
-/* Empujón: HI late más fuerte y muestra "¡Oprime!" encima. */
+@keyframes pwrFoco{0%,100%{box-shadow:var(--neon-suave)}50%{transform:scale(1.15);box-shadow:var(--neon-glow)}}
+.remote.teach-pwr .r-pwr::after{content:"Apágame para\A ir a la fiesta";bottom:calc(100% + 8px)}
+/* Parpadeo neón de todo lo que hay que tocar. Nunca se apaga del todo: queda un borde tenue entre latido y latido. */
+@keyframes glow{0%,100%{box-shadow:var(--neon-suave)}50%{box-shadow:var(--neon-glow)}}
+/* Empujón: HI late más fuerte y muestra "Oprime para cambiar canal" encima. */
 .remote.nudge .r-hi{animation:nudge .7s ease-in-out infinite}
-@keyframes nudge{50%{transform:scale(1.18);box-shadow:0 0 0 4px var(--orange),0 0 22px 8px rgba(232,116,42,.7)}}
-.remote.nudge .r-hi::after{content:"¡Oprime!";position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);white-space:nowrap;
-  font-family:var(--screen);font-size:18px;line-height:1;color:#1b0f06;background:var(--orange);border-radius:6px;padding:3px 7px;pointer-events:none}
+@keyframes nudge{0%,100%{box-shadow:var(--neon-suave)}50%{transform:scale(1.18);box-shadow:var(--neon-glow)}}
+.remote.nudge .r-hi::after{content:"Oprime para\A cambiar canal";bottom:calc(100% + 8px)}
+/* Globito neón (verde con marco brillante) de los botones del control. */
+.remote.nudge .r-hi::after,.remote.teach-pwr .r-pwr::after{position:absolute;left:50%;transform:translateX(-50%);white-space:pre;text-align:center;pointer-events:none;
+  font-family:var(--screen);font-size:18px;line-height:1;color:#eaffe0;background:#071a07;border:2px solid var(--neon);border-radius:6px;padding:4px 8px;
+  text-shadow:0 0 6px var(--neon);box-shadow:0 0 6px var(--neon),0 0 16px rgba(57,255,20,.6),inset 0 0 8px rgba(57,255,20,.45)}
 /* "A continuación": cintillo que entra por la izquierda con el próximo canal sin ver. */
 .next-up{position:absolute;left:5%;right:5%;bottom:9%;z-index:3;margin:0;font-family:var(--screen);font-size:calc(var(--h) * .048);line-height:1.1;color:#fff;
   background:linear-gradient(90deg,rgba(232,116,42,.95),rgba(180,70,20,.85));border-radius:4px;padding:.2em .5em;transform:translateX(-115%);transition:transform .45s ease;pointer-events:none}
@@ -681,7 +703,9 @@ body.buzzing .tape{animation:shake .2s 7}
 .tv-aviso small{display:block;margin-top:.45em;font-size:.68em;color:#ffe14d}
 .tv-aviso.show{display:grid;animation:avisoIn .3s ease}
 .tv-aviso.alto{background:rgba(150,16,8,.9)}
-.tv-aviso.listo{background:rgba(10,100,40,.9)}
+/* Al completar los canales el aviso no tapa el video: es una franja abajo, con borde neón, y se queda hasta apagar. */
+.tv-aviso.listo{inset:auto 0 0 0;padding:3% 4%;font-size:calc(var(--h) * .05);background:rgba(6,60,20,.9);border-top:2px solid var(--neon);box-shadow:0 -4px 16px rgba(57,255,20,.45);text-shadow:0 0 6px rgba(57,255,20,.8)}
+.tv-aviso.listo small{display:inline;margin:0 0 0 .4em;font-size:.8em}
 @keyframes avisoIn{from{transform:scaleY(.04);filter:brightness(2.5)}}
 /* Sin sonido: aviso grande sobre la pantalla. */
 .mute-tip{display:none;position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:3;margin:0;white-space:nowrap;
@@ -698,8 +722,10 @@ body.buzzing .tape{animation:shake .2s 7}
 /* ---------- RADIOCASETE ---------- */
 /* Pantalla de información: texto a la izquierda y la cuenta 5..1 a la derecha. */
 .lcd{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:10px;background:#9db78e;color:#16240f;font-family:var(--screen);font-size:20px;border-radius:6px;padding:6px 12px;min-height:60px;line-height:1.15;box-shadow:inset 0 0 0 3px #6f8a61}
-.lcd-count{font-size:46px;font-weight:400;line-height:1;text-align:right;font-variant-numeric:tabular-nums}
-.lcd-count.ya{color:#a30d00;animation:blinkTip .5s steps(2,start) infinite}
+/* La cuenta es también un botón invisible: tocar el "¡YA!" hace lo mismo que la tecla REC. */
+.lcd-count{font-size:46px;font-weight:400;line-height:1;text-align:right;font-variant-numeric:tabular-nums;
+  border:0;background:transparent;padding:0;color:inherit;cursor:pointer;min-width:1.2em;min-height:1em}
+.lcd-count.ya{color:#a30d00;text-shadow:0 0 6px rgba(255,40,40,.8),0 0 14px rgba(255,40,40,.5);animation:blinkTip .5s steps(2,start) infinite}
 .btn.glow{animation:glow 1.6s ease-in-out infinite}
 /* La grabadora (rec.png, 510x423). Teclas: PLAY = primera (x 50-88), REC = roja (x 192-228), y 104-134. */
 .radio{position:relative;justify-self:center;aspect-ratio:510/423;width:min(100%,calc((var(--ah) - var(--deck) - 40px) * 1.2057))}
@@ -714,10 +740,10 @@ body.buzzing .tape{animation:shake .2s 7}
 @media (hover:hover){ .r-rec:hover,.r-rec:hover ~ .r-play{background:rgba(255,255,255,.28);box-shadow:0 0 0 3px var(--orange),0 0 16px 5px rgba(232,116,42,.6)} }
 /* Mientras suena el jingle, REC y PLAY "se oprimen" solos para mostrar qué hay que hacer. */
 .radio.demo .rkey{animation:keyDemo 1.4s ease-in-out infinite}
-@keyframes keyDemo{40%,60%{background:rgba(255,255,255,.28);box-shadow:0 0 0 3px var(--orange),0 0 16px 5px rgba(232,116,42,.6);transform:translateY(2px)}}
+@keyframes keyDemo{40%,60%{background:rgba(57,255,20,.18);box-shadow:var(--neon-glow);transform:translateY(2px)}}
 /* ¡Ya! REC parpadea en rojo. */
 .radio.now .r-rec{animation:recNow .5s steps(2,start) infinite}
-@keyframes recNow{50%{box-shadow:0 0 0 4px #ff3b30,0 0 22px 8px rgba(255,59,48,.7)}}
+@keyframes recNow{50%{box-shadow:0 0 0 2px #ff3b3b,0 0 10px 3px #ff3b3b,0 0 26px 8px rgba(255,40,40,.65),0 0 44px 14px rgba(255,40,40,.35)}}
 
 /* ---------- LOS TELÉFONOS NARANJAS ---------- */
 .track-tel{grid-template-columns:minmax(0,6fr) minmax(0,5fr)}
@@ -757,10 +783,19 @@ body.buzzing .tape{animation:shake .2s 7}
 .car-next{right:8px;animation:glow 1.6s ease-in-out infinite}
 /* Mientras falten juegos por ver: la flecha ▶ crece, palpita en naranja y dice "¡Toca aquí!". */
 .carrusel.guiar .car-next{width:56px;height:56px;font-size:22px;background:var(--orange);animation:flechaFoco 1.1s ease-in-out infinite}
-@keyframes flechaFoco{50%{transform:translateY(-50%) scale(1.15);box-shadow:0 0 0 6px rgba(232,116,42,.45),0 0 26px 10px rgba(232,116,42,.6)}}
-.carrusel.guiar .car-next::before{content:"¡Toca aquí!";position:absolute;right:calc(100% + 10px);top:50%;transform:translateY(-50%);white-space:nowrap;pointer-events:none;
-  font-family:var(--screen);font-size:20px;line-height:1;color:#1b0f06;background:#fff;border:2px solid #1b0f06;border-radius:6px;padding:4px 8px;box-shadow:3px 3px 0 #1b0f06}
-.juegos-aviso{font-family:var(--screen);font-size:22px;line-height:1.15;color:var(--crt);animation:soft 2.2s ease-in-out infinite}
+@keyframes flechaFoco{0%,100%{transform:translateY(-50%);box-shadow:var(--neon-suave)}50%{transform:translateY(-50%) scale(1.15);box-shadow:var(--neon-glow)}}
+.carrusel.guiar .car-next::before{content:"¡Toca aquí!";position:absolute;right:calc(100% + 10px);top:50%;transform:translateY(-50%)}
+/* Globito neón "¡Toca aquí!" (carrusel y «Sin usar» del ciber). */
+.carrusel.guiar .car-next::before,.sinusar::after{white-space:nowrap;pointer-events:none;font-family:var(--screen);font-size:20px;line-height:1;
+  color:#eaffe0;background:#071a07;border:2px solid var(--neon);border-radius:6px;padding:4px 8px;text-shadow:0 0 6px var(--neon);
+  box-shadow:0 0 6px var(--neon),0 0 16px rgba(57,255,20,.6),inset 0 0 8px rgba(57,255,20,.45)}
+/* Llamado: instrucción clara de qué hacer para seguir. Letra de pantalla, verde neón, marco que late. */
+.llamado{justify-self:start;margin:0;font-family:var(--screen);font-size:23px;line-height:1.15;color:#eaffe0;text-shadow:0 0 6px rgba(57,255,20,.9);
+  background:rgba(57,255,20,.07);border:2px solid var(--neon);border-radius:8px;padding:6px 12px;animation:llamado 1.6s ease-in-out infinite}
+.llamado b{font-weight:400;color:var(--neon)}
+@keyframes llamado{0%,100%{box-shadow:0 0 4px rgba(57,255,20,.5)}50%{box-shadow:0 0 10px 2px var(--neon),0 0 24px 6px rgba(57,255,20,.45)}}
+.llamado.hecho{animation:none;border-color:var(--crt);color:var(--crt);text-shadow:none;background:transparent}
+.short .llamado{font-size:20px;padding:4px 10px}
 .car-dots{display:flex;justify-content:center;gap:8px}
 .car-dots i{width:10px;height:10px;border-radius:50%;background:#4b3c46;transition:background .3s,transform .3s}
 .car-dots i.visto{background:var(--crt)}
@@ -813,6 +848,8 @@ body.buzzing .tape{animation:shake .2s 7}
 #celTxt{flex:1;overflow:hidden;overflow-wrap:anywhere}
 .smsbox{display:grid;gap:8px}
 .smsbox label{font-size:14px;color:var(--muted)}
+/* En pantallas bajitas el rótulo "Mensaje de texto" se oculta a la vista (los lectores de pantalla lo siguen leyendo) para que quepa el llamado. */
+.short .smsbox label{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
 .short .smsbox{gap:6px}
 .short .smsbox textarea{min-height:58px;font-size:18px}
 .smsbox textarea{width:100%;min-height:90px;resize:vertical;background:#1a1418;color:var(--text);border:1px solid #5a4652;border-radius:8px;padding:8px;font-family:var(--screen);font-size:20px}
@@ -840,8 +877,7 @@ body.buzzing .tape{animation:shake .2s 7}
 .c-cont{left:12.1%;width:11.1%;font-variant-numeric:tabular-nums}
 /* «Sin usar» (x 149-209, y 73-88): brilla y dice "¡Toca aquí!" hasta que se toca. */
 .sinusar{position:absolute;left:26.2%;top:52.6%;width:10.7%;height:11.2%;border:0;padding:0;background:transparent;border-radius:2px;cursor:pointer;animation:glow 1.3s ease-in-out infinite}
-.sinusar::after{content:"¡Toca aquí!";position:absolute;left:50%;top:calc(100% + 6px);transform:translateX(-50%);white-space:nowrap;pointer-events:none;
-  font-family:var(--screen);font-size:18px;line-height:1;color:#1b0f06;background:var(--orange);border:2px solid #1b0f06;border-radius:6px;padding:3px 7px}
+.sinusar::after{content:"¡Toca aquí!";position:absolute;left:50%;top:calc(100% + 6px);transform:translateX(-50%);font-size:18px}
 .ciberctl.activo .sinusar{display:none}
 .ciberctl:not(.activo){overflow:visible}
 
@@ -864,25 +900,51 @@ body.buzzing .tape{animation:shake .2s 7}
 .upl input{position:absolute;opacity:0;width:1px;height:1px}
 
 /* ---------- PISTA OCULTA: PASTEL + INVITACIÓN ---------- */
-.page.finale{background:radial-gradient(circle at 30% 10%,#3d2a1e,var(--bg) 70%)}
-.finale-in{width:min(100%,980px);margin:auto;display:grid;grid-template-columns:minmax(0,4fr) minmax(0,7fr);gap:16px 32px;align-items:center}
+/* Fondo hbd.jpeg (1344x849) con un velo oscuro encima para que el texto se lea sobre las luces. */
+.page.finale{background:linear-gradient(rgba(12,6,16,.5),rgba(12,6,16,.5)),url("../images/hbd.jpeg") center/cover no-repeat,var(--bg)}
+/* Tres columnas: pastel (izquierda), invitación (centro) y ruleta del regalo (derecha). */
+.finale-in{width:min(100%,1180px);margin:auto;display:grid;grid-template-columns:minmax(0,3fr) minmax(0,6fr) minmax(0,3.4fr);gap:14px 22px;align-items:center}
 .fin-cake{display:grid;justify-items:center}
 /* pastel.png (1177x1337): alto de la página, el ancho sale solo */
 .pastel{display:block;height:min(calc(var(--ah) - var(--deck) - 40px),440px);width:auto;max-width:100%;object-fit:contain;filter:drop-shadow(0 14px 22px rgba(0,0,0,.55))}
-.fin-inv{display:grid;gap:10px;justify-items:start}
-.fin-inv .lado{font-family:var(--screen);font-size:22px;color:var(--orange)}
-.fin-inv h2{font-family:var(--display);font-size:clamp(26px,calc(var(--aw) * .042),42px);line-height:1.1;color:var(--paper);font-weight:400}
+/* Los datos van en un panel oscuro translúcido sobre el fondo. */
+.fin-inv{display:grid;gap:10px;justify-items:start;background:rgba(14,8,18,.74);border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:16px 20px;
+  -webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px);box-shadow:0 14px 30px rgba(0,0,0,.45)}
+.fin-inv h2{font-family:var(--display);font-size:clamp(22px,calc(var(--aw) * .03),38px);line-height:1.1;color:var(--paper);font-weight:400}
 .inv-sub{font-family:var(--display);font-size:clamp(17px,calc(var(--aw) * .024),24px);line-height:1.2;color:var(--orange)}
 .inv{display:grid;grid-template-columns:auto 1fr;gap:4px 14px;margin:0}
 .inv dt{font-family:var(--screen);font-size:21px;line-height:1.2;color:var(--orange)}
 .inv dd{margin:0;font-weight:500}
 .inv-conf{font-weight:700;color:var(--crt)}
+/* ---------- RULETA DEL REGALO ---------- */
+.fin-ruleta{display:grid;justify-items:center;gap:8px;text-align:center}
+.ruleta-titulo{font-family:var(--display);font-weight:400;font-size:clamp(18px,calc(var(--aw) * .022),28px);line-height:1.1;color:var(--paper);text-shadow:0 2px 8px rgba(0,0,0,.7)}
+/* Tamaño del disco: lo que dé el ancho de la columna, sin pasarse del alto disponible. */
+.ruleta{position:relative;width:min(100%,calc(var(--ah) - var(--deck) - 150px),300px);aspect-ratio:1}
+/* 8 casillas de 45°, centradas en 0°, 45°, 90°… (por eso el degradado empieza en -22.5°): cada giro de 45° deja una casilla bajo la flecha. */
+.ruleta-disco{position:absolute;inset:0;border-radius:50%;cursor:pointer;
+  background:conic-gradient(from -22.5deg,#e8742a 0 45deg,#f4c900 0 90deg,#ff4fd8 0 135deg,#18c5e8 0 180deg,#8a3ffc 0 225deg,#39d353 0 270deg,#ff3b3b 0 315deg,#2f6bff 0 360deg);
+  border:5px solid #fff;box-shadow:0 0 0 3px #1b0f06,0 0 14px 3px rgba(57,255,20,.6),0 10px 24px rgba(0,0,0,.55);
+  transition:transform 5.5s cubic-bezier(.12,.6,.1,1)}
+.ruleta-disco span{position:absolute;inset:0;display:flex;justify-content:center;padding-top:8%;transform:rotate(calc(var(--i) * 45deg));pointer-events:none;
+  font-family:var(--display);font-size:clamp(16px,calc((var(--ah) - var(--deck) - 150px) * .12),32px);line-height:1;color:#fff;text-shadow:0 0 2px #000,0 2px 4px rgba(0,0,0,.8)}
+/* Flecha arriba, apuntando hacia el centro. */
+.ruleta-flecha{position:absolute;left:50%;top:-6px;transform:translateX(-50%);width:0;height:0;z-index:2;
+  border-left:13px solid transparent;border-right:13px solid transparent;border-top:24px solid #fff;filter:drop-shadow(0 0 3px #000) drop-shadow(0 0 6px rgba(57,255,20,.8))}
+.ruleta-centro{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:28%;aspect-ratio:1;border-radius:50%;z-index:2;
+  border:3px solid #1b0f06;background:radial-gradient(circle at 40% 35%,#fff,#e9e2cf);color:#1b0f06;font-family:var(--screen);font-size:clamp(13px,calc((var(--ah) - var(--deck) - 150px) * .08),20px);line-height:1;padding:0;animation:glow 1.6s ease-in-out infinite}
+/* El premio: cuadro alegre que aparece con un salto al parar la ruleta. Su espacio está reservado para que nada se mueva. */
+.premio{margin:0;min-height:2.4em;display:grid;place-items:center;visibility:hidden;white-space:nowrap;font-family:var(--display);font-size:clamp(16px,calc(var(--aw) * .021),26px);line-height:1.1;
+  color:#1b0f06;background:linear-gradient(135deg,#ffe14d,#ff9a3c 50%,#ff4fd8);border:3px solid #fff;border-radius:12px;padding:.25em .6em;
+  box-shadow:0 0 0 3px #1b0f06,0 0 18px 4px rgba(255,79,216,.6);transform:rotate(-3deg)}
+.premio.show{visibility:visible;animation:premio .6s cubic-bezier(.2,1.6,.4,1)}
+@keyframes premio{from{transform:rotate(-14deg) scale(.2);opacity:0}}
+.short .ruleta-titulo{font-size:18px}
 .port .finale-in{grid-template-columns:minmax(0,1fr)}
 .port .fin-inv{justify-items:center;text-align:center}
 .port .pastel{height:min(calc(var(--ah) * .46),320px)}
-.short .fin-inv{gap:6px}
-.short .fin-inv .lado{font-size:19px}
-.short .fin-inv h2{font-size:clamp(22px,calc(var(--aw) * .034),32px)}
+.short .fin-inv{gap:6px;padding:12px 16px}
+.short .fin-inv h2{font-size:clamp(20px,calc(var(--aw) * .028),30px)}
 .short .inv-sub{font-size:17px}
 .short .inv dt{font-size:18px}
 .short .inv dd,.short .inv-conf{font-size:14px}
@@ -1224,7 +1286,7 @@ deck();
 
 ## 11. `js/tv.js`
 
-Intro: televisor y control remoto. 121 líneas.
+Intro: televisor y control remoto. 123 líneas.
 
 ````js
 // El televisor: primera página después del aviso. Videos y control remoto (OFF-ON, LO, HI).
@@ -1244,9 +1306,10 @@ function guia(){
   $('#tvGuia').innerHTML=CANALES.map((c,i)=>`<i class="${vistos.has(i)?'visto':''}${i===ch?' ahora':''}">${String(c.n).padStart(2,'0')}</i>`).join('');
 }
 // Aviso grande en la pantalla del TV (tipo boletín). cls: 'alto' (rojo) o 'listo' (verde).
+// ms = cuánto dura; sin ms se queda puesto.
 function aviso(html, cls, ms){
   const a=$('#tvAviso'); a.innerHTML=html; a.className='tv-aviso show '+cls;
-  clearTimeout(aviso.t); aviso.t=setTimeout(()=>{ a.className='tv-aviso'; },ms);
+  clearTimeout(aviso.t); if(ms) aviso.t=setTimeout(()=>{ a.className='tv-aviso'; },ms);
 }
 // Empujón: si se queda 7 s en un canal sin haber visto todos, sale "A continuación" con el próximo canal sin ver
 // y el botón HI dice "¡Oprime!".
@@ -1267,7 +1330,8 @@ function completar(){
   clearTimeout(nudgeT); $('#nextUp').classList.remove('show');
   remote.className='remote teach-pwr'; hint.innerHTML=TIP_APAGAR;
   $('#dkMsg').innerHTML='¡Listo! <b>Apaga el TV</b> con el botón OFF-ON y que empiece la fiesta ▸';
-  aviso('¡VISTE TODOS LOS CANALES!<small>Ya puedes apagar el TV</small>','listo',3000);
+  // Franja abajo de la pantalla (no tapa el video) que se queda hasta apagar.
+  aviso('¡VISTE TODOS LOS CANALES!<small>Ya puedes apagar el TV</small>','listo');
   [523,659,784,1047].forEach((f,i)=>tone(f,.18,'triangle',.05,i*.12));
 }
 function snowLoop(){
@@ -1352,7 +1416,7 @@ tune(); guia();
 
 ## 12. `js/lado-a.js`
 
-Pistas 1 a 3. 134 líneas.
+Pistas 1 a 3. 149 líneas.
 
 ````js
 // Pistas 1 a 3 (90s): radio, los teléfonos naranjas, los juegos.
@@ -1422,13 +1486,28 @@ $('#radioRec').addEventListener('click', ()=>{
   rAcciones(false,true,rOk);
 });
 // Prender: el toque desbloquea los dos audios (iPhone lo exige) y arranca.
+// La canción suena al doble de volumen: pasa por una ganancia x2 y un limitador para que no se distorsione.
+// Solo en la página publicada (http/https): abierta con doble clic (file://) el navegador la dejaría muda, así que ahí suena normal.
+let cancionGain=null;
+function amplificarCancion(){
+  if(cancionGain || !/^https?:$/.test(location.protocol)) return;
+  const ctx=actx(); if(!ctx) return;
+  try{
+    const lim=ctx.createDynamicsCompressor();
+    lim.threshold.value=-3; lim.knee.value=0; lim.ratio.value=20; lim.attack.value=.003; lim.release.value=.1;
+    cancionGain=ctx.createGain(); cancionGain.gain.value=2;
+    ctx.createMediaElementSource(cancion).connect(cancionGain).connect(lim).connect(ctx.destination);
+  }catch(e){ cancionGain=null; }
+}
 $('#radioOn').addEventListener('click', ()=>{
   [jingle,cancion].forEach(a=>{ a.preload='auto'; const pr=a.play(); a.pause(); if(pr) pr.catch(()=>{}); });
-  rArrancar();
+  amplificarCancion(); rArrancar();
 });
+// Botón invisible en la cuenta: tocar el "¡YA!" hace exactamente lo mismo que la tecla roja REC.
+$('#radioCount').addEventListener('click', ()=>$('#radioRec').click());
 $('#radioRestart').addEventListener('click', rArrancar);
 $('#radioNext').addEventListener('click', ()=>step(1));
-$('#soundBtn').addEventListener('click', ()=>{ jingle.muted=cancion.muted=!soundOn; });
+$('#soundBtn').addEventListener('click', ()=>{ jingle.muted=cancion.muted=!soundOn; if(cancionGain) cancionGain.gain.value=soundOn?2:0; });
 cerrar('p-radio');
 onPage('p-radio', {
   enter(){ if(cancion.preload==='none'){ cancion.preload='auto'; cancion.load(); } },
@@ -1493,7 +1572,7 @@ jMostrar();
 
 ## 13. `js/lado-b.js`
 
-Pistas 4 a 7. 142 líneas.
+Pistas 4 a 7. 143 líneas.
 
 ````js
 // Pistas 4 a 7 (2000s): chat, celular, ciber, fotos.
@@ -1524,7 +1603,8 @@ $('#dialBtn').addEventListener('click', async ()=>{
   await sleep(900);
   conectando=false; conectado=true; msnImg.classList.remove('off','marcando');
   tone(660,.1,'sine',.05); tone(990,.12,'sine',.05,.1);
-  $('#chatDesc').innerHTML='¡Ya estás conectado! Escríbele a tu amigo en la ventana de conversación y oprime Send. <b>Para seguir a la siguiente pista, envíale un zumbido.</b>';
+  $('#chatDesc').textContent='¡Ya estás conectado! Escríbele a tu amigo en la ventana de conversación y oprime Send.';
+  $('#chatLlamado').innerHTML='👉 Para seguir a la siguiente pista, <b>envíale un zumbido</b>.';
   $('#buzzBtn').hidden=false;
 });
 function line(html, cls=''){ const d=document.createElement('div'); d.className=cls; d.innerHTML=html; log.appendChild(d); log.scrollTop=log.scrollHeight; return d; }
@@ -1547,7 +1627,7 @@ $('#buzzBtn').addEventListener('click', async ()=>{
   line('Has enviado un zumbido.','bz');
   document.body.classList.remove('buzzing'); void document.body.offsetWidth; document.body.classList.add('buzzing');
   for(let i=0;i<36;i++) tone(i%2?140:110,.04,'square',.06,i*.04);
-  if($('#chatNext').hidden){ $('#buzzBtn').classList.remove('glow'); $('#chatNext').hidden=false; abrir('p-chat'); }
+  if($('#chatNext').hidden){ $('#buzzBtn').classList.remove('glow'); $('#chatLlamado').hidden=true; $('#chatNext').hidden=false; abrir('p-chat'); }
   await sleep(2000); line('<b>~*El Parcero*~</b> dice: ya ya, ¡no me zumbe más!');
 });
 
@@ -1593,7 +1673,7 @@ $('#perdidaBtn').addEventListener('click', async ()=>{
   celTxt.innerHTML='Llamando...<br>Parcero'; tone(425,.4,'sine',.05); await sleep(900);
   celTxt.innerHTML='Llamada realizada<br>Saldo intacto'; tone(300,.15,'square',.05);
   // La perdida ya cumplió: su botón le da el puesto a "Siguiente pista".
-  if($('#celNext').hidden){ $('#perdidaBtn').hidden=true; $('#celNext').hidden=false; abrir('p-cel'); }
+  if($('#celNext').hidden){ $('#perdidaBtn').hidden=true; $('#celLlamado').hidden=true; $('#celNext').hidden=false; abrir('p-cel'); }
   perdiendo=false;
 });
 $('#celNext').addEventListener('click', ()=>step(1));
@@ -1616,7 +1696,7 @@ $('#sinUsar').addEventListener('click', ()=>{
   cbStart=Date.now(); ciberCtl.classList.add('activo'); $('#ciberPc').classList.add('activo');
   [400,800,1200,2100,1800].forEach((f,i)=>tone(f,.18,'square',.025,i*.18));
   cbInt=setInterval(()=>{ const s=Math.floor((Date.now()-cbStart)/1000); $('#cbCont').textContent=`${Math.floor(s/3600)}:${dos(Math.floor(s/60)%60)}:${dos(s%60)}`; },250);
-  $('#cbSay').textContent='¡PC 3 asignado! El tiempo ya está corriendo, a $1.500 la hora.';
+  $('#cbSay').textContent='¡PC 3 asignado! El tiempo ya está corriendo, a $1.500 la hora.'; $('#cbSay').classList.add('hecho');
   $('#ciberNext').hidden=false; abrir('p-ciber');
 });
 $('#ciberNext').addEventListener('click', ()=>step(1));
@@ -1642,10 +1722,10 @@ $('#fotosNext').addEventListener('click', ()=>step(1));
 
 ## 14. `js/final.js`
 
-Pista oculta. 27 líneas.
+Pista oculta. 73 líneas.
 
 ````js
-// Pista oculta: pastel, invitación (datos en FIESTA de js/contenido.js) y confeti al llegar.
+// Pista oculta: pastel, invitación (datos en FIESTA de js/contenido.js), ruleta de regalo y confeti.
 /* ---------- INVITACIÓN ---------- */
 [['Cuándo',FIESTA.fecha],['Hora',FIESTA.hora],['Dónde',FIESTA.lugar],['Ojo',FIESTA.nota]].forEach(([k,v])=>{
   if(!v) return;
@@ -1656,20 +1736,66 @@ $('#invConf').textContent=FIESTA.confirmar||'';
 if(FIESTA.whatsapp){ const a=$('#rsvp'); a.href=FIESTA.whatsapp; a.hidden=false; }
 
 /* ---------- PISTA OCULTA ---------- */
-// La primera vez que se llega: confeti y una melodía de celebración.
+// La primera vez que se llega: confeti y una melodía de celebración; luego la ruleta gira sola.
 let festejado=false;
 onPage('p-final', { enter(){
   if(festejado) return; festejado=true;
   setTimeout(()=>{ party(); [523,523,587,523,698,659].forEach((f,i)=>tone(f,.3,'triangle',.06,i*.32)); },500);
+  setTimeout(girar,1800);
 } });
-function party(){
+
+/* ---------- RULETA DEL REGALO ---------- */
+// 8 casillas con "?". Cada giro da 6 vueltas y queda centrada en una casilla. Al parar sale "¡Lluvia de sobres!" con confeti.
+const disco=$('#ruletaDisco'), premio=$('#premio'), DURA_GIRO=5.5;
+let giroTotal=0, girando=false;
+function girar(){
+  if(girando) return; girando=true;
+  premio.classList.remove('show'); premio.textContent='';
+  const pasos=6*8+Math.floor(Math.random()*8);       // casillas que pasan por la flecha
+  giroTotal+=pasos*45; disco.style.transform=`rotate(${giroTotal}deg)`;
+  // Un clic por cada casilla que pasa, cada vez más espaciados (sigue la curva del frenado).
+  for(let k=1;k<=pasos;k++) tone(1400,.03,'square',.03,DURA_GIRO*(1-Math.cbrt(1-k/pasos)));
+}
+disco.addEventListener('transitionend', ()=>{
+  if(!girando) return; girando=false;
+  premio.textContent='¡Lluvia de sobres! 💌'; premio.classList.add('show');
+  [523,659,784,1047,784,1047].forEach((f,i)=>tone(f,.22,'triangle',.06,i*.13));
+  const c=centroEn(premio, $('#p-final')); explosion(c.x, c.y);
+});
+$('#ruletaBtn').addEventListener('click', girar);
+disco.addEventListener('click', girar);
+
+/* ---------- CONFETI ---------- */
+// Un solo lienzo y un solo ciclo para todo el confeti: la lluvia de bienvenida y las explosiones de la ruleta.
+const COLORES=['#e8742a','#f4c900','#003a8c','#ce1126','#a6f0b0','#f2e4c0','#7fc8f8','#39ff14','#ff4fd8'];
+const papelitos=[];
+let confetiCorre=false;
+function soltar(lista){
   if(matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  const c=$('#confetti'), x=c.getContext('2d'); c.width=c.clientWidth; c.height=c.clientHeight;
-  const cols=['#e8742a','#f4c900','#003a8c','#ce1126','#a6f0b0','#f2e4c0','#7fc8f8'];
-  const P=Array.from({length:180},()=>({x:Math.random()*c.width,y:-20-Math.random()*c.height*.5,vx:(Math.random()-.5)*2,vy:2+Math.random()*3,r:Math.random()*6.28,s:5+Math.random()*6,c:cols[Math.random()*cols.length|0]}));
-  const t0=performance.now();
-  (function f(t){ x.clearRect(0,0,c.width,c.height);
-    P.forEach(p=>{ p.x+=p.vx; p.y+=p.vy; p.r+=.1; x.save(); x.translate(p.x,p.y); x.rotate(p.r); x.fillStyle=p.c; x.fillRect(-p.s/2,-p.s/4,p.s,p.s/2); x.restore(); });
-    if(t-t0<5000) requestAnimationFrame(f); else x.clearRect(0,0,c.width,c.height); })(t0);
+  const c=$('#confetti');
+  if(!confetiCorre){ c.width=c.clientWidth; c.height=c.clientHeight; }
+  papelitos.push(...lista);
+  if(confetiCorre) return; confetiCorre=true;
+  const x=c.getContext('2d');
+  (function f(){
+    x.clearRect(0,0,c.width,c.height);
+    for(let i=papelitos.length-1;i>=0;i--){
+      const p=papelitos[i]; p.vy+=p.g; p.x+=p.vx; p.y+=p.vy; p.vx*=.99; p.r+=p.vr;
+      if(p.y>c.height+30){ papelitos.splice(i,1); continue; }
+      x.save(); x.translate(p.x,p.y); x.rotate(p.r); x.fillStyle=p.c; x.fillRect(-p.s/2,-p.s/4,p.s,p.s/2); x.restore();
+    }
+    if(papelitos.length) requestAnimationFrame(f); else { confetiCorre=false; x.clearRect(0,0,c.width,c.height); }
+  })();
+}
+const papel=o=>({r:Math.random()*6.28,vr:(Math.random()-.5)*.3,s:5+Math.random()*6,c:COLORES[Math.random()*COLORES.length|0],...o});
+// Lluvia desde arriba (bienvenida)
+function party(){
+  const c=$('#confetti'), w=c.clientWidth, h=c.clientHeight;
+  soltar(Array.from({length:180},()=>papel({x:Math.random()*w,y:-20-Math.random()*h*.5,vx:(Math.random()-.5)*2,vy:2+Math.random()*3,g:0})));
+}
+// Explosión desde un punto (el premio de la ruleta)
+function explosion(x0,y0){
+  soltar(Array.from({length:140},()=>{ const a=Math.random()*Math.PI*2, v=4+Math.random()*7;
+    return papel({x:x0,y:y0,vx:Math.cos(a)*v,vy:Math.sin(a)*v-4,g:.18}); }));
 }
 ````
