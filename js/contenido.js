@@ -7,7 +7,7 @@
    whatsapp = enlace completo de WhatsApp para confirmar (wa.me con el mensaje ya escrito). Si está vacío no sale el botón. */
 const FIESTA = {
   fecha: '12 de diciembre de 2026',
-  hora: '4:00 p.m. A esta hora empezamos y no quiero que te pierdas nada...',
+  hora: '3:00 p.m. A esta hora empezamos y no quiero que te pierdas nada...',
   lugar: 'Torre Imperio Business Center. Cajicá, Cundinamarca.',
   nota: 'Llega a la hora indicada, por fa...',
   confirmar: 'Confirma tu asistencia antes del 1 de diciembre.',
