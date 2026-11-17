@@ -39,7 +39,10 @@ y al final una pista oculta con las velas y los datos de la fiesta.
    - Pista oculta (3 columnas): `pastel.png` a la izquierda, al centro "Lo conseguiste... ¡Bienvenido a mi fiesta!!!" en un panel
      oscuro translúcido, y a la derecha la ruleta "🎁 Regalo sorpresa" (8 casillas "?"). Fondo `hbd.jpeg` con velo oscuro.
      La ruleta gira sola 1,8 s después de llegar (y otra vez al tocar GIRAR); siempre para centrada en una casilla y debajo sale
-     el cuadro "¡Lluvia de sobres! 💌" con una explosión de confeti. El confeti (lluvia y explosiones) usa un solo lienzo: `soltar()` en final.js.
+     el cuadro "¡Lluvia de sobres! 💌" (con la calcomanía de Hot Wheels en la esquina) y una explosión de confeti. El confeti (lluvia y explosiones) usa un solo lienzo: `soltar()` en final.js.
+     4 s después sale debajo de la ruleta la tarjeta del regalo Hot Wheels (`#hwCard`: texto del carrito para "mi museo de los recuerdos",
+     logo `hw-logo.png`, pista con carrito y "¡Cuenta conmigo y mi carrito!", que abre el mismo enlace `FIESTA.whatsapp` y suelta confeti). La ruleta se achica
+     (`.fin-ruleta.con-hw`) y, si no cabe (celular), la página baja sola hasta mostrar la tarjeta completa. Sale una vez y se queda.
      El panel muestra los datos de `FIESTA` y el botón de WhatsApp (`FIESTA.whatsapp`, enlace completo).
      Al llegar la primera vez cae confeti. Es la última página: no tiene botón de volver a empezar.
 La barra de abajo (⏪ ⏩, carretes, línea de avance y sonido; sin texto ni contador) mueve pista por pista, también deslizando o con las flechas,
@@ -67,7 +70,9 @@ y no avanza en una pista cerrada.
 - `deslizar(el, fn, ignorar)` en `cinta.js` maneja el deslizar con el dedo (incluso con la `.app` girada); lo usan la cinta y el carrusel.
 - Ojo con los nombres de clase: son globales en el CSS. Un estado como `.pregunta` chocó con otro elemento; usar nombres específicos.
 - `js/final.js`: invitación, confeti al llegar, volver a empezar.
-- `images/`: `tv.png`, `tv-control.png`, `casete-abierto.png` (portada), grabadora `rec.png`, foto `tel.png`, juegos (`canicas`, `coca`, `rejo-quemado`, `trompo`, `yermis`), `msn.png`, `1100.png`, `cyber.png`, `cyber-contador.png`, `cyberwin.jpg`, `cinta.png`, `pastel.png` y `hbd.jpeg` (fondo de la última pantalla).
+- `images/`: `tv.png`, `tv-control.png`, `casete-abierto.png` (portada), grabadora `rec.png`, foto `tel.png`, juegos (`canicas`, `coca`, `rejo-quemado`, `trompo`, `yermis`), `msn.png`, `1100.png`, `cyber.png`, `cyber-contador.png`, `cyberwin.jpg`, `cinta.png`, `pastel.png`, `hbd.jpeg` (fondo de la última pantalla) y `hw-logo.png`
+  (logo Hot Wheels con fondo transparente, sacado de `hw.png`, que traía el cuadriculado pintado; `hw.png` no se usa).
+  Ícono de la pestaña: `nav.png` (192x192, convertido de `NAV.webp`, que no se usa); el título es "Harrison - 40 Grandes Éxitos".
   `videos/`: `rugrats`, `oki-doki`, `supercampeones`, `chavo`, `caballeros`, `dragon-ball-z` (.mp4, H.264 + AAC, 640x360).
   `sounds/`: `jingle-la-mega.mp3` y `mis-ojos.mp3` (Pista 1), `modem.mp3` (Pista 4), `ringtone.mp3` (Pista 5).
   Nombres de archivo: minúsculas, sin espacios, tildes ni símbolos, y nunca empezando por `_` (GitHub Pages los ignora).

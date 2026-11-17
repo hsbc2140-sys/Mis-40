@@ -23,7 +23,7 @@ const disco=$('#ruletaDisco'), premio=$('#premio'), DURA_GIRO=5.5;
 let giroTotal=0, girando=false;
 function girar(){
   if(girando) return; girando=true;
-  premio.classList.remove('show'); premio.textContent='';
+  clearTimeout(hwEspera); premio.classList.remove('show'); premio.textContent='';
   const pasos=6*8+Math.floor(Math.random()*8);       // casillas que pasan por la flecha
   giroTotal+=pasos*45; disco.style.transform=`rotate(${giroTotal}deg)`;
   // Un clic por cada casilla que pasa, cada vez más espaciados (sigue la curva del frenado).
@@ -31,12 +31,40 @@ function girar(){
 }
 disco.addEventListener('transitionend', ()=>{
   if(!girando) return; girando=false;
-  premio.textContent='¡Lluvia de sobres! 💌'; premio.classList.add('show');
+  premio.innerHTML='¡Lluvia de sobres! 💌<img class="hw-sticker" src="images/hw-logo.png" alt="y un carro Hot Wheels">';
+  premio.classList.add('show');
   [523,659,784,1047,784,1047].forEach((f,i)=>tone(f,.22,'triangle',.06,i*.13));
   const c=centroEn(premio, $('#p-final')); explosion(c.x, c.y);
+  if(hwCard.hidden) hwEspera=setTimeout(mostrarHW,4000);   // 4 s después llega el segundo regalo: el Hot Wheels
 });
 $('#ruletaBtn').addEventListener('click', girar);
 disco.addEventListener('click', girar);
+
+/* ---------- REGALO HOT WHEELS ---------- */
+// Tarjeta debajo de la ruleta: cada invitado trae un carrito para el museo de los recuerdos. Sale una vez y se queda.
+const hwCard=$('#hwCard'), finPage=$('#p-final');
+let hwEspera=0;
+function mostrarHW(){
+  if(!hwCard.hidden) return;
+  hwCard.hidden=false; hwCard.parentElement.classList.add('con-hw');   // la ruleta se achica para hacerle campo
+  if(pages[at].id!=='p-final') return;                                // si ya se fue de la página, sale sin sonido
+  [98,131,175,233,311].forEach((f,i)=>tone(f,.16,'sawtooth',.035,i*.09));   // ¡brrrum!
+  // En pantallas bajitas no cabe todo: la página baja sola hasta que se vea la tarjeta completa.
+  setTimeout(()=>{
+    let y=0; for(let e=hwCard; e && e!==finPage; e=e.offsetParent) y+=e.offsetTop;
+    const falta=y+hwCard.offsetHeight+12-finPage.clientHeight;
+    if(falta>finPage.scrollTop) finPage.scrollTo({top:falta, behavior:'smooth'});
+  },650);
+  setTimeout(()=>{ const c=centroEn($('.hw-logo'), finPage); explosion(c.x, c.y); },1200);
+}
+// "¡Cuenta conmigo!": la tarjeta se queda, el botón confirma con fiesta.
+// "¡Cuenta conmigo y mi carrito!": abre el mismo WhatsApp de confirmar (FIESTA.whatsapp) y suelta confeti.
+const hwOk=$('#hwOk');
+if(FIESTA.whatsapp) hwOk.href=FIESTA.whatsapp;
+hwOk.addEventListener('click', ()=>{
+  tone(784,.12,'triangle',.05); tone(1047,.18,'triangle',.05,.1);
+  const c=centroEn(hwOk, finPage); explosion(c.x, c.y);
+});
 
 /* ---------- CONFETI ---------- */
 // Un solo lienzo y un solo ciclo para todo el confeti: la lluvia de bienvenida y las explosiones de la ruleta.

@@ -4,7 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#1a1319">
-<title>Harrison 40 · Grandes éxitos</title>
+<title>Harrison - 40 Grandes Éxitos</title>
+<!-- Ícono de la pestaña y del acceso directo en el celular: nav.png (192x192, sacado de NAV.webp) -->
+<link rel="icon" type="image/png" href="images/nav.png">
+<link rel="apple-touch-icon" href="images/nav.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&family=VT323&family=Rubik:wght@400;500;700&display=swap" rel="stylesheet">
@@ -294,6 +297,13 @@
           <button class="ruleta-centro" id="ruletaBtn" aria-label="Girar la ruleta del regalo sorpresa">GIRAR</button>
         </div>
         <p class="premio" id="premio" role="status"></p>
+        <!-- Regalo Hot Wheels: sale debajo de la ruleta 4 s después de "¡Lluvia de sobres!" (la ruleta se achica para hacerle campo). -->
+        <div class="hw-card" id="hwCard" aria-live="polite" hidden>
+          <p class="hw-texto">Además, trae contigo un <b>carrito Hot Wheels</b>.<br>Este será una pieza única de colección en <b>mi museo de los recuerdos</b> por tu maravillosa compañía.</p>
+          <img class="hw-logo" src="images/hw-logo.png" alt="Hot Wheels">
+          <div class="hw-pista" aria-hidden="true"><span>🏎️</span></div>
+          <a class="btn hot glow hw-ok" id="hwOk" target="_blank" rel="noopener">¡Cuenta conmigo y mi carrito! 🏁</a>
+        </div>
       </div>
     </div>
   </section>

@@ -107,8 +107,8 @@ las coordenadas en píxeles de la imagen. Si se cambia una imagen, hay que volve
 
 | Archivo | Líneas | Contenido |
 |---|---|---|
-| [`index.html`](#5-indexhtml) | 328 | Marcado de todas las páginas |
-| [`css/styles.css`](#6-cssstylescss) | 493 | Estilos |
+| [`index.html`](#5-indexhtml) | 338 | Marcado de todas las páginas |
+| [`css/styles.css`](#6-cssstylescss) | 523 | Estilos |
 | [`js/utils.js`](#7-jsutilsjs) | 48 | Utilidades y sonido |
 | [`js/horizontal.js`](#8-jshorizontaljs) | 49 | Vista horizontal forzada |
 | [`js/contenido.js`](#9-jscontenidojs) | 61 | Textos y datos editables |
@@ -116,13 +116,13 @@ las coordenadas en píxeles de la imagen. Si se cambia una imagen, hay que volve
 | [`js/tv.js`](#11-jstvjs) | 123 | Intro: televisor y control remoto |
 | [`js/lado-a.js`](#12-jslado-ajs) | 149 | Pistas 1 a 3 |
 | [`js/lado-b.js`](#13-jslado-bjs) | 143 | Pistas 4 a 7 |
-| [`js/final.js`](#14-jsfinaljs) | 73 | Pista oculta |
+| [`js/final.js`](#14-jsfinaljs) | 101 | Pista oculta |
 
 ---
 
 ## 5. `index.html`
 
-Marcado de todas las páginas. 328 líneas.
+Marcado de todas las páginas. 338 líneas.
 
 ````html
 <!DOCTYPE html>
@@ -131,7 +131,10 @@ Marcado de todas las páginas. 328 líneas.
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#1a1319">
-<title>Harrison 40 · Grandes éxitos</title>
+<title>Harrison - 40 Grandes Éxitos</title>
+<!-- Ícono de la pestaña y del acceso directo en el celular: nav.png (192x192, sacado de NAV.webp) -->
+<link rel="icon" type="image/png" href="images/nav.png">
+<link rel="apple-touch-icon" href="images/nav.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&family=VT323&family=Rubik:wght@400;500;700&display=swap" rel="stylesheet">
@@ -421,6 +424,13 @@ Marcado de todas las páginas. 328 líneas.
           <button class="ruleta-centro" id="ruletaBtn" aria-label="Girar la ruleta del regalo sorpresa">GIRAR</button>
         </div>
         <p class="premio" id="premio" role="status"></p>
+        <!-- Regalo Hot Wheels: sale debajo de la ruleta 4 s después de "¡Lluvia de sobres!" (la ruleta se achica para hacerle campo). -->
+        <div class="hw-card" id="hwCard" aria-live="polite" hidden>
+          <p class="hw-texto">Además, trae contigo un <b>carrito Hot Wheels</b>.<br>Este será una pieza única de colección en <b>mi museo de los recuerdos</b> por tu maravillosa compañía.</p>
+          <img class="hw-logo" src="images/hw-logo.png" alt="Hot Wheels">
+          <div class="hw-pista" aria-hidden="true"><span>🏎️</span></div>
+          <a class="btn hot glow hw-ok" id="hwOk" target="_blank" rel="noopener">¡Cuenta conmigo y mi carrito! 🏁</a>
+        </div>
       </div>
     </div>
   </section>
@@ -457,7 +467,7 @@ Marcado de todas las páginas. 328 líneas.
 
 ## 6. `css/styles.css`
 
-Estilos. 493 líneas.
+Estilos. 523 líneas.
 
 ````css
 /* Estilos de la tarjeta. Las variables de color y fuentes están en :root. */
@@ -916,6 +926,7 @@ body.buzzing .tape{animation:shake .2s 7}
 .inv dt{font-family:var(--screen);font-size:21px;line-height:1.2;color:var(--orange)}
 .inv dd{margin:0;font-weight:500}
 .inv-conf{font-weight:700;color:var(--crt)}
+.fin-inv .btnrow{justify-self:stretch;justify-content:center}   /* botón de WhatsApp centrado en el panel */
 /* ---------- RULETA DEL REGALO ---------- */
 .fin-ruleta{display:grid;justify-items:center;gap:8px;text-align:center}
 .ruleta-titulo{font-family:var(--display);font-weight:400;font-size:clamp(18px,calc(var(--aw) * .022),28px);line-height:1.1;color:var(--paper);text-shadow:0 2px 8px rgba(0,0,0,.7)}
@@ -927,18 +938,47 @@ body.buzzing .tape{animation:shake .2s 7}
   border:5px solid #fff;box-shadow:0 0 0 3px #1b0f06,0 0 14px 3px rgba(57,255,20,.6),0 10px 24px rgba(0,0,0,.55);
   transition:transform 5.5s cubic-bezier(.12,.6,.1,1)}
 .ruleta-disco span{position:absolute;inset:0;display:flex;justify-content:center;padding-top:8%;transform:rotate(calc(var(--i) * 45deg));pointer-events:none;
-  font-family:var(--display);font-size:clamp(16px,calc((var(--ah) - var(--deck) - 150px) * .12),32px);line-height:1;color:#fff;text-shadow:0 0 2px #000,0 2px 4px rgba(0,0,0,.8)}
+  font-family:var(--display);line-height:1;color:#fff;text-shadow:0 0 2px #000,0 2px 4px rgba(0,0,0,.8)}
 /* Flecha arriba, apuntando hacia el centro. */
 .ruleta-flecha{position:absolute;left:50%;top:-6px;transform:translateX(-50%);width:0;height:0;z-index:2;
   border-left:13px solid transparent;border-right:13px solid transparent;border-top:24px solid #fff;filter:drop-shadow(0 0 3px #000) drop-shadow(0 0 6px rgba(57,255,20,.8))}
 .ruleta-centro{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:28%;aspect-ratio:1;border-radius:50%;z-index:2;
-  border:3px solid #1b0f06;background:radial-gradient(circle at 40% 35%,#fff,#e9e2cf);color:#1b0f06;font-family:var(--screen);font-size:clamp(13px,calc((var(--ah) - var(--deck) - 150px) * .08),20px);line-height:1;padding:0;animation:glow 1.6s ease-in-out infinite}
+  border:3px solid #1b0f06;background:radial-gradient(circle at 40% 35%,#fff,#e9e2cf);color:#1b0f06;font-family:var(--screen);line-height:1;padding:0;animation:glow 1.6s ease-in-out infinite}
 /* El premio: cuadro alegre que aparece con un salto al parar la ruleta. Su espacio está reservado para que nada se mueva. */
 .premio{margin:0;min-height:2.4em;display:grid;place-items:center;visibility:hidden;white-space:nowrap;font-family:var(--display);font-size:clamp(16px,calc(var(--aw) * .021),26px);line-height:1.1;
   color:#1b0f06;background:linear-gradient(135deg,#ffe14d,#ff9a3c 50%,#ff4fd8);border:3px solid #fff;border-radius:12px;padding:.25em .6em;
   box-shadow:0 0 0 3px #1b0f06,0 0 18px 4px rgba(255,79,216,.6);transform:rotate(-3deg)}
-.premio.show{visibility:visible;animation:premio .6s cubic-bezier(.2,1.6,.4,1)}
+.premio.show{visibility:visible;animation:premio .6s cubic-bezier(.2,1.6,.4,1);position:relative}
 @keyframes premio{from{transform:rotate(-14deg) scale(.2);opacity:0}}
+/* Cuando sale el regalo Hot Wheels la ruleta se achica (con transición) para hacerle campo debajo.
+   Los "?" y el GIRAR se miden con el ancho del disco (cqw) para que se achiquen con él. */
+.ruleta{container-type:inline-size;transition:width .6s ease}
+.ruleta-disco span{font-size:clamp(14px,12cqw,32px)}
+.ruleta-centro{font-size:clamp(11px,7cqw,20px)}
+.fin-ruleta.con-hw .ruleta{width:min(100%,max(130px,calc(var(--ah) - var(--deck) - 480px)),300px)}
+/* Calcomanía de Hot Wheels pegada en la esquina del premio. */
+.hw-sticker{position:absolute;right:-16px;top:-18px;width:clamp(58px,calc(var(--aw) * .075),86px);height:auto;transform:rotate(9deg);
+  filter:drop-shadow(0 0 1.5px #fff) drop-shadow(0 0 1.5px #fff) drop-shadow(0 3px 4px rgba(0,0,0,.6));pointer-events:none}
+/* ---------- REGALO HOT WHEELS ---------- */
+/* Tarjeta debajo de la ruleta, del ancho de la columna. hw-logo.png (403x113) es el logo con fondo transparente. */
+.hw-card{position:relative;width:min(100%,420px);margin-top:6px;display:grid;justify-items:center;gap:8px;text-align:center;
+  padding:12px 12px 14px;border-radius:14px;border:3px solid #ffd400;
+  background:radial-gradient(circle at 50% 0,rgba(255,212,0,.22),transparent 60%),linear-gradient(160deg,#1f0b3a,#120720 60%,#2a0a12);
+  box-shadow:0 0 0 3px #e2231a,0 0 22px 5px rgba(255,120,0,.55),0 14px 30px rgba(0,0,0,.6);animation:hwCard .7s cubic-bezier(.2,1.5,.4,1)}
+@keyframes hwCard{from{transform:translateY(40px) rotate(-6deg) scale(.4);opacity:0}}
+.hw-logo{width:92%;height:auto;filter:drop-shadow(0 0 2px #fff) drop-shadow(0 0 2px #fff) drop-shadow(0 5px 8px rgba(0,0,0,.6));animation:hwLogo 2.4s ease-in-out .7s infinite}
+@keyframes hwLogo{0%,100%{transform:rotate(-2deg) scale(1)}50%{transform:rotate(2deg) scale(1.05)}}
+.hw-texto{font-size:clamp(13px,calc(var(--aw) * .0118),17px);line-height:1.35;color:var(--paper)}
+.hw-texto b{color:#ffd400;font-weight:700}
+/* Pista naranja de carreras con un carrito que la recorre. */
+.hw-pista{position:relative;width:100%;height:12px;border-radius:3px;overflow:hidden;
+  background:repeating-linear-gradient(90deg,transparent 0 16px,rgba(255,255,255,.55) 16px 26px) center/100% 2px no-repeat,linear-gradient(#ff8a00,#f05a00)}
+.hw-pista span{position:absolute;top:50%;left:0;font-size:17px;line-height:1;transform:translate(-120%,-55%) scaleX(-1);animation:hwCarro 2.2s linear infinite}
+@keyframes hwCarro{to{left:100%;transform:translate(20%,-55%) scaleX(-1)}}
+.hw-ok{font-size:15px;line-height:1.25;padding:8px 14px;text-align:center}
+.short .hw-card{gap:6px;padding:10px 10px 12px}
+.short .hw-ok{font-size:14px;padding:7px 10px}
+.port .hw-texto{font-size:16px}
 .short .ruleta-titulo{font-size:18px}
 .port .finale-in{grid-template-columns:minmax(0,1fr)}
 .port .fin-inv{justify-items:center;text-align:center}
@@ -1722,7 +1762,7 @@ $('#fotosNext').addEventListener('click', ()=>step(1));
 
 ## 14. `js/final.js`
 
-Pista oculta. 73 líneas.
+Pista oculta. 101 líneas.
 
 ````js
 // Pista oculta: pastel, invitación (datos en FIESTA de js/contenido.js), ruleta de regalo y confeti.
@@ -1750,7 +1790,7 @@ const disco=$('#ruletaDisco'), premio=$('#premio'), DURA_GIRO=5.5;
 let giroTotal=0, girando=false;
 function girar(){
   if(girando) return; girando=true;
-  premio.classList.remove('show'); premio.textContent='';
+  clearTimeout(hwEspera); premio.classList.remove('show'); premio.textContent='';
   const pasos=6*8+Math.floor(Math.random()*8);       // casillas que pasan por la flecha
   giroTotal+=pasos*45; disco.style.transform=`rotate(${giroTotal}deg)`;
   // Un clic por cada casilla que pasa, cada vez más espaciados (sigue la curva del frenado).
@@ -1758,12 +1798,40 @@ function girar(){
 }
 disco.addEventListener('transitionend', ()=>{
   if(!girando) return; girando=false;
-  premio.textContent='¡Lluvia de sobres! 💌'; premio.classList.add('show');
+  premio.innerHTML='¡Lluvia de sobres! 💌<img class="hw-sticker" src="images/hw-logo.png" alt="y un carro Hot Wheels">';
+  premio.classList.add('show');
   [523,659,784,1047,784,1047].forEach((f,i)=>tone(f,.22,'triangle',.06,i*.13));
   const c=centroEn(premio, $('#p-final')); explosion(c.x, c.y);
+  if(hwCard.hidden) hwEspera=setTimeout(mostrarHW,4000);   // 4 s después llega el segundo regalo: el Hot Wheels
 });
 $('#ruletaBtn').addEventListener('click', girar);
 disco.addEventListener('click', girar);
+
+/* ---------- REGALO HOT WHEELS ---------- */
+// Tarjeta debajo de la ruleta: cada invitado trae un carrito para el museo de los recuerdos. Sale una vez y se queda.
+const hwCard=$('#hwCard'), finPage=$('#p-final');
+let hwEspera=0;
+function mostrarHW(){
+  if(!hwCard.hidden) return;
+  hwCard.hidden=false; hwCard.parentElement.classList.add('con-hw');   // la ruleta se achica para hacerle campo
+  if(pages[at].id!=='p-final') return;                                // si ya se fue de la página, sale sin sonido
+  [98,131,175,233,311].forEach((f,i)=>tone(f,.16,'sawtooth',.035,i*.09));   // ¡brrrum!
+  // En pantallas bajitas no cabe todo: la página baja sola hasta que se vea la tarjeta completa.
+  setTimeout(()=>{
+    let y=0; for(let e=hwCard; e && e!==finPage; e=e.offsetParent) y+=e.offsetTop;
+    const falta=y+hwCard.offsetHeight+12-finPage.clientHeight;
+    if(falta>finPage.scrollTop) finPage.scrollTo({top:falta, behavior:'smooth'});
+  },650);
+  setTimeout(()=>{ const c=centroEn($('.hw-logo'), finPage); explosion(c.x, c.y); },1200);
+}
+// "¡Cuenta conmigo!": la tarjeta se queda, el botón confirma con fiesta.
+// "¡Cuenta conmigo y mi carrito!": abre el mismo WhatsApp de confirmar (FIESTA.whatsapp) y suelta confeti.
+const hwOk=$('#hwOk');
+if(FIESTA.whatsapp) hwOk.href=FIESTA.whatsapp;
+hwOk.addEventListener('click', ()=>{
+  tone(784,.12,'triangle',.05); tone(1047,.18,'triangle',.05,.1);
+  const c=centroEn(hwOk, finPage); explosion(c.x, c.y);
+});
 
 /* ---------- CONFETI ---------- */
 // Un solo lienzo y un solo ciclo para todo el confeti: la lluvia de bienvenida y las explosiones de la ruleta.
